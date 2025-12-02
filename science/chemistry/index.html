@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Instructors - AL 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts: Inter (Body), Merriweather (Headings) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* --- NEW ACADEMIC PALETTE --- */
+        :root {
+            --color-primary: #1f4068; /* Deep Midnight Blue */
+            --color-background: #f4f4f5; /* Very Light Gray/Off-White */
+            --color-card-bg: white;
+            --color-text-dark: #1f2937; 
+            --color-accent: #f59e0b; /* Amber */
+        }
+        
+        /* Typography and Background */
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text-dark); 
+        }
+        .hero-title, h1, h2, h3, h4 { 
+            font-family: 'Merriweather', serif; 
+            color: var(--color-text-dark);
+        }
+        /* Make important headings inside the profile accent color */
+        .profile-content h3 {
+             color: var(--color-primary);
+        }
+
+        /* Header (Clean, Modern Theme) */
+        .header-bg {
+            background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%); /* Very light blue gradient */
+            border-bottom: 2px solid #bfdbfe; /* Light blue border */
+            box-shadow: 0 4px 15px rgba(31, 64, 104, 0.1); 
+        }
+
+        /* NEW STYLE: Tab Navigation */
+        #instructor-nav {
+            background-color: var(--color-card-bg);
+            border-radius: 1.5rem;
+            padding: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            max-height: 70vh; 
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            color: #4b5563; 
+        }
+
+        .nav-item:hover {
+            background-color: #e5e7eb; 
+            color: var(--color-text-dark);
+        }
+
+        .nav-item.active {
+            background-color: var(--color-primary);
+            color: white; 
+            box-shadow: 0 2px 8px rgba(31, 64, 104, 0.4);
+        }
+
+        /* NEW STYLE: Content Panel */
+        #profile-content {
+            background-color: var(--color-card-bg);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            min-height: 500px; 
+            border: 1px solid #d1d5db;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Profile Image Styling */
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid var(--color-primary); 
+            box-shadow: 0 0 0 8px rgba(31, 64, 104, 0.2);
+        }
+
+        /* Badge Styling */
+        .qual-badge {
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 0.4rem 1.25rem;
+            border-radius: 9999px;
+            display: inline-block;
+        }
+
+        /* Button Styles */
+        .video-button {
+            transition: all 0.3s ease;
+            background-color: var(--color-primary);
+            color: white;
+            box-shadow: 0 4px 6px rgba(31, 64, 104, 0.4);
+        }
+        .video-button:hover {
+            background-color: #2c598d; /* Slightly darker primary */
+            transform: translateY(-1px);
+        }
+
+        /* Responsive Layout: Stacking on mobile (Adjustments for better flow) */
+        @media (max-width: 1023px) {
+            .header-bg {
+                padding-top: 2rem;
+                padding-bottom: 2rem;
+            }
+            main {
+                padding-bottom: 2rem;
+            }
+            /* Make nav a horizontal scrollable list on mobile */
+            #instructor-nav {
+                max-height: none; 
+                overflow-x: auto; 
+                overflow-y: hidden;
+                display: flex;
+                flex-wrap: nowrap; 
+                gap: 0.5rem;
+                padding: 0.5rem;
+                margin-left: -1rem; 
+                margin-right: -1rem;
+                border-radius: 1rem;
+            }
+            .nav-item {
+                flex-shrink: 0; 
+                text-align: center;
+                margin-bottom: 0;
+            }
+            #profile-content {
+                padding: 1.5rem;
+            }
+            .profile-img {
+                width: 120px;
+                height: 120px;
+            }
+            .qual-badge {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen antialiased flex flex-col">
+
+    <!-- Header Section (Light Theme) -->
+    <header class="header-bg py-12 mb-8 sm:mb-12 rounded-b-[3rem] relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <!-- NEW: Back to Home Button/Link -->
+            <a href="#" class="inline-flex items-center text-sm font-semibold text-gray-600 hover:text-gray-800 transition duration-150 mb-4 p-2 -ml-2 rounded-lg hover:bg-white">
+                <i data-lucide="home" class="w-4 h-4 mr-1"></i> Back to Home
+            </a>
+
+            <h1 id="main-title" class="hero-title text-3xl sm:text-5xl font-extrabold tracking-tight mb-2 text-gray-900">
+                Advanced Chemistry Faculty
+            </h1>
+            <p id="main-subtitle" class="text-gray-600 mt-2 text-lg font-medium max-w-2xl">
+                Select an instructor to view their specialization, expertise, and video archive.
+            </p>
+        </div>
+    </header>
+
+    <!-- Instructors Section (Tabbed Layout) -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-24 flex-grow">
+        
+        <div class="lg:grid lg:grid-cols-4 lg:gap-8">
+            
+            <!-- 1. Instructor Navigation Panel (Visible on all sizes, vertical on lg+, horizontal scroll on mobile) -->
+            <div id="instructor-nav" class="col-span-1 mb-6 lg:mb-0">
+                <!-- Navigation items will be injected here by JavaScript -->
+            </div>
+
+            <!-- 2. Profile Content Area -->
+            <div id="profile-content" class="col-span-3 transition-opacity duration-300">
+                <p id="initial-message" class="text-gray-500 text-center py-20">Select an instructor from the left panel to view their detailed profile.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 text-gray-500 py-10 mt-auto border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex items-center justify-center gap-3 text-gray-800 mb-4">
+                <div class="p-2 rounded-lg bg-[#1f4068]">
+                    <i data-lucide="graduation-cap" class="h-6 w-6 text-white"></i>
+                </div>
+                <span class="text-xl font-bold font-heading">OpenLearn</span>
+            </div>
+            <p class="text-gray-500 text-sm mb-6 font-medium tracking-wide">Empowering Physical Science Students</p>
+            <p class="text-xs text-gray-400">© 2025 OpenLearn. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Localization Strings (English Only) ---
+        const localization = {
+            mainTitle: "Advanced Chemistry Faculty",
+            mainSubtitle: "Select an instructor to view their specialization, expertise, and video archive.",
+            initialMessage: "Select an instructor from the left panel to view their detailed profile.",
+            expertiseTitle: "Core Expertise (A/L Syllabus)",
+            awardTitle: "Distinction Award",
+            videoButton: "Access [Name]'s Full Video Archive",
+        };
+
+        // --- Data structure for the instructors (English Only) ---
+        const instructors = [
+            {
+                name: "Dr. Amila Dasanayaka",
+                title: "Specialist in Organic Chemistry and Reaction Kinetics",
+                qualification: "MBBS, University of Colombo",
+                imagePlaceholder: "DR+AD",
+                // FIX: Updated to a stable, working image URL and to include all requested data
+                imageUrl: "https://yt3.ggpht.com/UTNhZW3hg7H9CF8gxWd7AlsZnR2mjyfvSjSawc83QjKAzQMq2Tgm8XnhCenGIFeJWcl_vSUB=s800-c-k-c0x00ffffff-no-rj", 
+                color: "emerald",
+                description: "Dr. Dasanayaka provides deep conceptual clarity in the most challenging units of the A/L syllabus, focusing on complex organic synthesis, kinetics, and structure determination.",
+                expertise: [
+                    "Organic Synthesis and Reaction Mechanisms", 
+                    "Chemical Kinetics and Equilibrium", 
+                    "Acid-Base Concepts and Calculations", 
+                    "Spectroscopy (NMR, IR) and Structure Determination"
+                ],
+                award: {
+                    // FIX: Updated award name to include the year
+                    name: "Highest A Pass Rate Obtained in the year 2024",
+                    icon: "award",
+                    // FIX: Updated text to include student count (2014 students)
+                    text: "Received recognition for guiding the 2024 A/L batch, consisting of 2014 students, to achieve the highest percentage of A Passes in the subject nationwide."
+                },
+                archiveLink: "https://t.me/Sci_Link/536"
+            },
+            {
+                name: "Dr. Randeer Karunanayaka",
+                title: "Inorganic Chemistry and Environmental Science Specialist",
+                qualification: "MBBS, University of Peradeniya",
+                imagePlaceholder: "DR+RK",
+                imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr_tPQ3ydNvmHkb8acJ-AOixbMeQ8wuNBFlQ&s", 
+                color: "violet",
+                description: "Dr. Karunanayaka ensures student mastery over Inorganic, Industrial, and Environmental units, applying precise analytical and physical chemistry principles to real-world problems.",
+                expertise: [
+                    "Inorganic Chemistry (s, p, d block elements)", 
+                    "Environmental and Industrial Chemistry", 
+                    "Electrochemical Cells and Thermodynamics", 
+                    "Qualitative and Quantitative Analysis (Titrations)"
+                ],
+                award: {
+                    name: "Analytical Precision Prize",
+                    icon: "microscope",
+                    text: "Highly valued for training students in the high-precision analytical methods required for scientific careers."
+                },
+                archiveLink: "https://t.me/+rI4qrp_Ob09iNzQ1"
+            }
+        ];
+
+        // Function to update static UI text (Simplified, English only)
+        function updateStaticText() {
+            const langData = localization;
+            document.getElementById('main-title').textContent = langData.mainTitle;
+            document.getElementById('main-subtitle').textContent = langData.mainSubtitle;
+            const initialMessageEl = document.getElementById('initial-message');
+            if(initialMessageEl) initialMessageEl.textContent = langData.initialMessage;
+        }
+
+        // Function to reset the content area to the initial message
+        function clearProfile() {
+            const contentContainer = document.getElementById('profile-content');
+            contentContainer.innerHTML = `
+                <p id="initial-message" class="text-gray-500 text-center py-20">${localization.initialMessage}</p>
+            `;
+            // Remove active state from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            // Optionally scroll back up to the navigation panel on small screens
+            if (window.innerWidth < 1024) {
+                document.getElementById('instructor-nav').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            lucide.createIcons();
+        }
+
+        // Function to render the navigation menu (Simplified, English only)
+        function renderNav() {
+            const navContainer = document.getElementById('instructor-nav');
+            navContainer.innerHTML = ''; 
+            
+            // Get the currently active index from the DOM, if it exists
+            let currentActiveIndex = document.querySelector('.nav-item.active')?.getAttribute('data-index');
+            
+            // Determine which index to display initially (Default to Dr. Randeer: index 1)
+            let indexToDisplay = 1; 
+
+            if (currentActiveIndex !== null && typeof currentActiveIndex !== 'undefined') {
+                 // If an item was previously active, respect that choice
+                indexToDisplay = parseInt(currentActiveIndex);
+            }
+
+            instructors.forEach((instructor, index) => {
+                const navItem = document.createElement('div');
+                navItem.classList.add('nav-item');
+                
+                // Set the active class based on the calculated indexToDisplay 
+                if (index === indexToDisplay) {
+                    navItem.classList.add('active'); 
+                }
+
+                navItem.textContent = instructor.name; 
+                navItem.setAttribute('data-index', index);
+                
+                navItem.addEventListener('click', () => {
+                    // Update active state
+                    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                    navItem.classList.add('active');
+                    showProfile(index);
+                    
+                    // On mobile, scroll the content into view after selecting an item
+                    if (window.innerWidth < 1024) {
+                        document.getElementById('profile-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+                
+                navContainer.appendChild(navItem);
+            });
+            
+            // Render the profile for the determined default/active index
+            if (instructors.length > indexToDisplay) {
+                showProfile(indexToDisplay);
+            } else {
+                clearProfile();
+            }
+        }
+
+        // Function to render the selected profile details (Simplified, English only)
+        function showProfile(index) {
+            const instructor = instructors[index];
+            const contentContainer = document.getElementById('profile-content');
+            
+            // Select strings directly from instructor and localization
+            // FIX: Ensure expertiseData is an array using '|| []' to prevent 'map' error if it's undefined
+            const expertiseData = instructor.expertise || []; 
+            const title = instructor.title;
+            const name = instructor.name;
+            const description = instructor.description;
+            const expertiseTitle = localization.expertiseTitle;
+            const awardName = instructor.award.name;
+            const videoButtonText = localization.videoButton.replace('[Name]', name.split(' ')[1] || name);
+
+            const expertiseList = expertiseData.map(item => `
+                <li class="flex items-start text-gray-700">
+                    <i data-lucide="check-circle" class="w-4 h-4 mr-2 text-${instructor.color}-500 mt-1 flex-shrink-0"></i> 
+                    ${item}
+                </li>
+            `).join('');
+            
+            // Determine image placeholder color for different accents
+            let phColor;
+            if (instructor.color === 'emerald') phColor = '059669'; // Emerald 600
+            else if (instructor.color === 'violet') phColor = '7c3aed'; // Violet 600
+            else phColor = '1f4068'; // Default Primary Blue
+
+            // Use the provided image URL or fall back to the placeholder
+            const fallbackSrc = `https://placehold.co/150x150/${phColor}/ffffff?text=${instructor.imagePlaceholder}`;
+            const imageUrl = instructor.imageUrl || fallbackSrc;
+
+            contentContainer.innerHTML = `
+                <!-- Back Button (Visible on screens smaller than large (lg)) -->
+                <button id="back-to-nav" class="lg:hidden flex items-center text-[#1f4068] font-bold mb-6 hover:text-[#2c598d] transition duration-150 p-2 -ml-2 rounded-lg hover:bg-blue-50">
+                    <i data-lucide="arrow-left" class="w-5 h-5 mr-2"></i> Back to Faculty List
+                </button>
+
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-8 mb-8 pb-8 border-b border-gray-200">
+                    <img 
+                        src="${imageUrl}" 
+                        alt="${instructor.name}" 
+                        class="profile-img"
+                        onerror="this.onerror=null; this.src='${fallbackSrc}';"
+                    >
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl font-extrabold text-gray-900 mb-2">${name}</h2>
+                        <div class="qual-badge bg-${instructor.color}-100 text-${instructor.color}-800 border border-${instructor.color}-400 mb-3">${instructor.qualification}</div>
+                        <p class="text-lg font-semibold text-[#1f4068] mb-4">${title}</p>
+                        <p class="text-gray-600 max-w-3xl">${description}</p>
+                    </div>
+                </div>
+
+                <!-- Specialization & Achievement Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                    
+                    <!-- Core Expertise -->
+                    <div>
+                        <h4 class="text-xl font-bold text-gray-700 mb-4 flex items-center">
+                            <i data-lucide="book-open-check" class="w-5 h-5 mr-2 text-[#1f4068]"></i> ${expertiseTitle}
+                        </h4>
+                        <ul class="space-y-3 text-base ml-2">
+                            ${expertiseList}
+                        </ul>
+                    </div>
+
+                    <!-- Popularity Award Box (Using Amber accent for highlight) -->
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 shadow-inner">
+                        <div class="flex flex-col gap-3">
+                            <div class="flex items-center gap-3 mb-1">
+                                <div class="p-2 bg-amber-100 text-amber-600 rounded-full">
+                                    <i data-lucide="${instructor.award.icon}" class="w-5 h-5"></i>
+                                </div>
+                                <p class="text-sm font-bold text-gray-800 uppercase tracking-wider">${awardName}</p>
+                            </div>
+                            <p class="text-base text-gray-700 font-medium leading-snug">
+                                "${instructor.award.text}"
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action -->
+                <div class="mt-10 w-full">
+                    <a href="${instructor.archiveLink}" class="video-button w-full flex items-center justify-center px-6 py-5 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl">
+                        <i data-lucide="play-circle" class="w-6 h-6 mr-3"></i>
+                        ${videoButtonText}
+                    </a>
+                </div>
+            `;
+            
+            // Add event listener for the new back button
+            document.getElementById('back-to-nav')?.addEventListener('click', clearProfile);
+
+            // Re-create lucide icons after injecting new content
+            lucide.createIcons();
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            updateStaticText(); // Set initial static text
+            renderNav(); // Render navigation and initial content
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
