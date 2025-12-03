@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commerce Stream Resources - OpenLearn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Noto+Sans+Sinhala:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Base Fonts */
+        body { font-family: 'Inter', sans-serif; }
+        body.sinhala { font-family: 'Noto Sans Sinhala', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Merriweather', serif; }
+        body.sinhala h1, body.sinhala h2, body.sinhala h3, body.sinhala h4 { font-family: 'Noto Sans Sinhala', sans-serif; }
+        
+        /* Glass Effect */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        /* Hero Background - Deep Teal/Blue */
+        .hero-bg {
+            background-color: #0f172a;
+            background-image: radial-gradient(at 0% 0%, hsla(270,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(180,39%,30%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(220,39%,30%,1) 0, transparent 50%);
+        }
+        /* Active Tab Color - Sky Blue */
+        .active-tab {
+            background-color: #0ea5e9; /* Sky-500 */
+            color: white;
+            border-color: #0ea5e9;
+        }
+        /* Inactive Tab Styles */
+        .inactive-tab {
+            background-color: white;
+            color: #475569;
+            border-color: #e2e8f0;
+        }
+        .inactive-tab:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+        /* Fade in animation for content switching */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/20 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-3">
+                    <a href="index.html" class="flex items-center gap-3 group">
+                        <!-- Changed button color to Sky-600 -->
+                        <div class="bg-sky-600 p-2 rounded-lg text-white shadow-lg shadow-sky-600/20 group-hover:bg-sky-700 transition">
+                            <i data-lucide="arrow-left" class="h-6 w-6"></i>
+                        </div>
+                        <!-- Changed hover text color to Sky-700 -->
+                        <span href="/index.html" class="text-xl font-bold text-slate-900 tracking-tight group-hover:text-sky-700 transition" data-key="brand_back">Back to Home</span>
+                    </a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleLanguage()" class="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium text-slate-600 hover:bg-slate-100 transition border border-slate-200">
+                        <i data-lucide="languages" class="h-4 w-4"></i>
+                        <span id="lang-label">සිංහල</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="pt-32 pb-16 hero-bg text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+        <!-- Changed accent color to Sky-500/20 -->
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-sky-500/20 rounded-full blur-3xl translate-y-1/2 translate-x-1/2"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <!-- Changed accent colors -->
+            <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-teal-900/50 border border-teal-500/30 text-teal-200 text-sm font-medium mb-6">
+                <i data-lucide="briefcase" class="h-4 w-4"></i>
+                <span data-key="header_tag">Stream Resources</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" data-key="header_title">Commerce Stream</h1>
+            <p class="text-slate-300 max-w-2xl mx-auto text-lg font-light" data-key="header_desc">
+                Comprehensive collection of past papers, marking schemes, and notes for Accounting, Business Studies, and Economics.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 -mt-8 relative z-20">
+        
+        <!-- Subject Tabs -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+            <!-- ACCOUNTING (Green Theme) -->
+            <button onclick="switchTab('accounting')" id="tab-accounting" class="active-tab px-4 py-2.5 rounded-xl font-semibold shadow-lg transition-all flex items-center gap-2 text-base md:text-lg">
+                <i data-lucide="calculator" class="h-5 w-5"></i>
+                <span data-key="tab_accounting">Accounting</span>
+            </button>
+            <!-- BUSINESS STUDIES (Indigo Theme) -->
+            <button onclick="switchTab('business')" id="tab-business" class="inactive-tab px-4 py-2.5 rounded-xl font-semibold shadow-sm border transition-all flex items-center gap-2 text-base md:text-lg">
+                <i data-lucide="briefcase" class="h-5 w-5"></i>
+                <span data-key="tab_business">Business Studies</span>
+            </button>
+            <!-- ECONOMICS (Amber Theme) -->
+            <button onclick="switchTab('economics')" id="tab-economics" class="inactive-tab px-4 py-2.5 rounded-xl font-semibold shadow-sm border transition-all flex items-center gap-2 text-base md:text-lg">
+                <i data-lucide="trending-up" class="h-5 w-5"></i>
+                <span data-key="tab_economics">Economics</span>
+            </button>
+            <!-- GENERAL ENGLISH REMOVED -->
+        </div>
+
+        <!-- Content Area -->
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden min-h-[500px]">
+            
+            <!-- ACCOUNTING SECTION (EMERALD/GREEN THEME) -->
+            <div id="content-accounting" class="p-6 md:p-8 animate-fade-in">
+                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800" data-key="accounting_title">Accounting Resources</h2>
+                        <p class="text-slate-500 text-sm mt-1" data-key="accounting_subtitle">Quick Access Links</p>
+                    </div>
+                    <!-- Icon and color updated -->
+                    <div class="bg-emerald-50 p-3 rounded-full text-emerald-600 hidden md:block">
+                        <i data-lucide="calculator" class="h-8 w-8"></i>
+                    </div>
+                </div>
+
+                <!-- Quick Links Grid (3 columns) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <!-- Links for Accounting -->
+                    <a href="https://drive.google.com/drive/folders/1xLnW8w1B2bmYArLU6VTsxT_AAdM4_m3k" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-emerald-300 hover:shadow-md transition group">
+                        <div class="bg-emerald-100 p-2.5 rounded-lg text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition">
+                            <i data-lucide="book" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-emerald-700 transition" data-key="res_syllabus">Syllabus</h3>
+                            <p class="text-xs text-slate-500 mt-1">Updated Curriculum</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://drive.google.com/drive/folders/15l3IwlaRiV5kWZozp5fVCOsay3Rmb7Jg" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-emerald-300 hover:shadow-md transition group">
+                        <div class="bg-emerald-100 p-2.5 rounded-lg text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition">
+                            <i data-lucide="file-text" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-emerald-700 transition" data-key="res_guide">Teachers' Guide</h3>
+                            <p class="text-xs text-slate-500 mt-1">Grades 12 & 13</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://drive.google.com/drive/folders/1iMZctKNHU9zxWOB2-LE7OmAxsFFa0Qfx" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-emerald-300 hover:shadow-md transition group">
+                        <div class="bg-emerald-100 p-2.5 rounded-lg text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition">
+                            <i data-lucide="sticky-note" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-emerald-700 transition" data-key="res_notes">Notes</h3>
+                            <p class="text-xs text-slate-500 mt-1">Theory and Summaries</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-emerald-300 hover:shadow-md transition group">
+                        <div class="bg-emerald-100 p-2.5 rounded-lg text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition">
+                            <i data-lucide="youtube" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-emerald-700 transition" data-key="res_videos">Video Lessons</h3>
+                            <p class="text-xs text-slate-500 mt-1">Problem Solving & Theory</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Exam Materials Grid -->
+                <div class="mb-6 pt-4 border-t border-slate-100">
+                    <h3 class="text-xl font-bold mb-4 text-slate-700" data-key="papers_section_title">Exam Materials & Publications</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- Past Papers -->
+                        <a href="https://drive.google.com/drive/folders/1kVxy-vJTV8M-Lr7SextqY2Q9UF1vMTy0" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="folder-archive" class="h-6 w-6 text-emerald-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_past_papers">Past Papers</span>
+                        </a>
+                        <!-- Marking Schemes -->
+                        <a href="#" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="check-square" class="h-6 w-6 text-emerald-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_marking_schemes">Marking Schemes</span>
+                        </a>
+                        <!-- School Papers -->
+                        <a href="https://alsciencepapers.blogspot.com/p/accounting-term-test-papers.html" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="school" class="h-6 w-6 text-emerald-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_school_papers">School Papers</span>
+                        </a>
+                        <!-- Provincial Papers -->
+                        <a href="https://pastpapers.wiki/grade-13-accounting-term-test-papers/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="map-pin" class="h-6 w-6 text-emerald-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_provincial_papers">Provincial Papers</span>
+                        </a>
+                        <!-- Pesuru Books -->
+                        <a href="https://drive.google.com/drive/folders/1tngYjYv3ITBUeAmq4seq_6AC9Z0WJRx-?usp=drive_link" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="notebook-pen" class="h-6 w-6 text-emerald-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_pesuru_books">Textbooks / Guides</span>
+                        </a>
+                        <!-- Model Papers -->
+                        <a href="https://drive.google.com/drive/folders/1gYi4nVTyiF4qbDKlaVfrwM67_I5APbd7" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="gantt-chart" class="h-6 w-6 text-emerald-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_model_papers">Model Papers</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BUSINESS STUDIES SECTION (INDIGO/BLUE THEME) -->
+            <div id="content-business" class="p-6 md:p-8 hidden animate-fade-in">
+                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800" data-key="business_title">Business Studies Resources</h2>
+                        <p class="text-slate-500 text-sm mt-1" data-key="business_subtitle">Quick Access Links</p>
+                    </div>
+                    <!-- Icon and color updated -->
+                    <div class="bg-indigo-50 p-3 rounded-full text-indigo-600 hidden md:block">
+                        <i data-lucide="briefcase" class="h-8 w-8"></i>
+                    </div>
+                </div>
+
+                <!-- Quick Links Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <!-- Links for Business Studies -->
+                    <a href="https://govdoc.lk/grade-12-business-studies-syllabus" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-indigo-300 hover:shadow-md transition group">
+                        <div class="bg-indigo-100 p-2.5 rounded-lg text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition">
+                            <i data-lucide="book" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-indigo-700 transition" data-key="res_syllabus">Syllabus</h3>
+                            <p class="text-xs text-slate-500 mt-1">Updated Curriculum</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://www.edukinniya.lk/2022/08/al-business-studies-teachers-guides.html" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-indigo-300 hover:shadow-md transition group">
+                        <div class="bg-indigo-100 p-2.5 rounded-lg text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition">
+                            <i data-lucide="file-text" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-indigo-700 transition" data-key="res_guide">Teachers' Guide</h3>
+                            <p class="text-xs text-slate-500 mt-1">Grades 12 & 13</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://drive.google.com/drive/folders/1A9FyCh1DpPvRlyQrpbQFdMn2N7qTwckZ" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-indigo-300 hover:shadow-md transition group">
+                        <div class="bg-indigo-100 p-2.5 rounded-lg text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition">
+                            <i data-lucide="users" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-indigo-700 transition" data-key="res_notes">Short Notes</h3>
+                            <p class="text-xs text-slate-500 mt-1">Management & HR</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-indigo-300 hover:shadow-md transition group">
+                        <div class="bg-indigo-100 p-2.5 rounded-lg text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition">
+                            <i data-lucide="youtube" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-indigo-700 transition" data-key="res_videos">Video Lessons</h3>
+                            <p class="text-xs text-slate-500 mt-1">Tutorials & Explanations</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Exam Materials Grid -->
+                <div class="mb-6 pt-4 border-t border-slate-100">
+                    <h3 class="text-xl font-bold mb-4 text-slate-700" data-key="papers_section_title">Exam Materials & Publications</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- Past Papers -->
+                        <a href="https://pastpapers.wiki/category/g-c-e-advanced-level/a-l-commerce/a-l-business-studies/?swcfpc=1" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="folder-archive" class="h-6 w-6 text-indigo-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_past_papers">Past Papers</span>
+                        </a>
+                        <!-- Marking Schemes -->
+                        <a href="https://www.alevelapi.com/category/bs-marking-schemes/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="check-square" class="h-6 w-6 text-indigo-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_marking_schemes">Marking Schemes</span>
+                        </a>
+                        <!-- School Papers -->
+                        <a href="https://pastpapers.wiki/grade-13-business-studiesterm-test-papers/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="school" class="h-6 w-6 text-indigo-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_school_papers">School Papers</span>
+                        </a>
+                        <!-- Provincial Papers -->
+                        <a href="https://pastpapers.wiki/grade-13-business-studiesterm-test-papers/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="map-pin" class="h-6 w-6 text-indigo-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_provincial_papers">Provincial Papers</span>
+                        </a>
+                        <!-- Textbooks / Guides -->
+                        <a href="https://drive.google.com/drive/folders/11F_mLPWZrKf1rvS8OviRBW3BAWW3adSB" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="notebook-pen" class="h-6 w-6 text-indigo-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_pesuru_books">Textbooks / Guides</span>
+                        </a>
+                        <!-- Model Papers -->
+                        <a href="https://drive.google.com/drive/folders/11F_mLPWZrKf1rvS8OviRBW3BAWW3adSB" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="gantt-chart" class="h-6 w-6 text-indigo-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_model_papers">Model Papers</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ECONOMICS SECTION (AMBER/YELLOW THEME) -->
+            <div id="content-economics" class="p-6 md:p-8 hidden animate-fade-in">
+                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800" data-key="economics_title">Economics Resources</h2>
+                        <p class="text-slate-500 text-sm mt-1" data-key="economics_subtitle">Quick Access Links</p>
+                    </div>
+                    <!-- Icon and color updated -->
+                    <div class="bg-amber-50 p-3 rounded-full text-amber-600 hidden md:block">
+                        <i data-lucide="trending-up" class="h-8 w-8"></i>
+                    </div>
+                </div>
+
+                <!-- Quick Links Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <!-- Links for Economics -->
+                    <a href="https://govdoc.lk/grade-12-economics-syllabus" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-amber-300 hover:shadow-md transition group">
+                        <div class="bg-amber-100 p-2.5 rounded-lg text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition">
+                            <i data-lucide="book" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-amber-700 transition" data-key="res_syllabus">Syllabus</h3>
+                            <p class="text-xs text-slate-500 mt-1">Updated Curriculum</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://govdoc.lk/grade-12-economics-teacher-guide" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-amber-300 hover:shadow-md transition group">
+                        <div class="bg-amber-100 p-2.5 rounded-lg text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition">
+                            <i data-lucide="file-text" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-amber-700 transition" data-key="res_guide">Teachers' Guide</h3>
+                            <p class="text-xs text-slate-500 mt-1">Grades 12 & 13</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://drive.google.com/drive/folders/1HbwfySGFb9i21HkpEmAxBhigXt60zcUV" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-amber-300 hover:shadow-md transition group">
+                        <div class="bg-amber-100 p-2.5 rounded-lg text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition">
+                            <i data-lucide="bar-chart" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-amber-700 transition" data-key="res_notes">Full Notes</h3>
+                            <p class="text-xs text-slate-500 mt-1">Macro & Micro Theory</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-amber-300 hover:shadow-md transition group">
+                        <div class="bg-amber-100 p-2.5 rounded-lg text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition">
+                            <i data-lucide="youtube" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-amber-700 transition" data-key="res_videos">Video Lessons</h3>
+                            <p class="text-xs text-slate-500 mt-1">Tutorials & Explanations</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Exam Materials Grid -->
+                <div class="mb-6 pt-4 border-t border-slate-100">
+                    <h3 class="text-xl font-bold mb-4 text-slate-700" data-key="papers_section_title">Exam Materials & Publications</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- Past Papers -->
+                        <a href="https://www.alevelapi.com/category/econ-past-papers/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-amber-50 border border-amber-200 hover:bg-amber-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="folder-archive" class="h-6 w-6 text-amber-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_past_papers">Past Papers</span>
+                        </a>
+                        <!-- Marking Schemes -->
+                        <a href="https://www.alevelapi.com/category/econ-marking-schemes/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-amber-50 border border-amber-200 hover:bg-amber-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="check-square" class="h-6 w-6 text-amber-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_marking_schemes">Marking Schemes</span>
+                        </a>
+                        <!-- School Papers -->
+                        <a href="https://pastpapers.wiki/grade-13-economics-term-test-papers/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-amber-50 border border-amber-200 hover:bg-amber-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="school" class="h-6 w-6 text-amber-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_school_papers">School Papers</span>
+                        </a>
+                        <!-- Provincial Papers -->
+                        <a href="https://govdoc.lk/category/model-papers/economics" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-amber-50 border border-amber-200 hover:bg-amber-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="map-pin" class="h-6 w-6 text-amber-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_provincial_papers">Provincial Papers</span>
+                        </a>
+                        <!-- Textbooks / Guides -->
+                        <a href="https://drive.google.com/drive/folders/1XyyuXbpnAGIzAAF0PNMAzKOIy41r5cVS" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-amber-50 border border-amber-200 hover:bg-amber-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="notebook-pen" class="h-6 w-6 text-amber-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_pesuru_books">Textbooks / Guides</span>
+                        </a>
+                        <!-- Model Papers -->
+                        <a href="https://samithalwis.wordpress.com/category/papers/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-amber-50 border border-amber-200 hover:bg-amber-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="gantt-chart" class="h-6 w-6 text-amber-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_model_papers">Model Papers</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex items-center justify-center gap-2 text-white mb-4">
+                <i data-lucide="graduation-cap" class="h-6 w-6 text-sky-500"></i>
+                <span class="text-lg font-bold" data-key="footer_brand">OpenLearn</span>
+            </div>
+            <p class="text-slate-500 text-sm mb-4" data-key="footer_sub">Empowering Commerce Stream Students</p>
+            <p class="text-xs text-slate-600" data-key="footer_copy">© 2025 OpenLearn. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        
+        // --- Tabs Logic ---
+        function switchTab(subject) {
+            // Updated list of all remaining subjects
+            ['accounting', 'business', 'economics'].forEach(s => {
+                const content = document.getElementById(`content-${s}`);
+                const tab = document.getElementById(`tab-${s}`);
+                if (content) content.classList.add('hidden');
+                if (tab) {
+                    tab.classList.remove('active-tab');
+                    tab.classList.add('inactive-tab');
+                }
+            });
+
+            // Show selected
+            const activeContent = document.getElementById(`content-${subject}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+            
+            // Update Tab Styles
+            const activeBtn = document.getElementById(`tab-${subject}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('inactive-tab');
+                activeBtn.classList.add('active-tab');
+            }
+        }
+
+        // --- Translation Logic ---
+        const translations = {
+            en: {
+                brand_back: "Back to Home",
+                header_tag: "Stream Resources",
+                header_title: "Commerce Stream",
+                // Updated description to reflect only three subjects
+                header_desc: "Comprehensive collection of past papers, marking schemes, and notes for Accounting, Business Studies, and Economics.",
+                
+                // Tabs
+                tab_accounting: "Accounting",
+                tab_business: "Business Studies",
+                tab_economics: "Economics",
+                
+                // Content Sections
+                accounting_title: "Accounting Resources",
+                accounting_subtitle: "Quick Access Links",
+                business_title: "Business Studies Resources",
+                business_subtitle: "Quick Access Links",
+                economics_title: "Economics Resources",
+                economics_subtitle: "Quick Access Links",
+
+
+                // Common Resources (Quick Links)
+                res_syllabus: "Syllabus",
+                res_guide: "Teachers' Guide",
+                res_notes: "Short Notes", 
+                res_notes_alt: "Management & HR", // Placeholder, updated in business section manually
+                res_videos: "Video Lessons", 
+                
+                // Exam Materials Links
+                papers_section_title: "Exam Materials & Publications",
+                link_past_papers: "Past Papers",
+                link_marking_schemes: "Marking Schemes",
+                link_school_papers: "School Papers",
+                link_provincial_papers: "Provincial Papers",
+                link_pesuru_books: "Textbooks / Guides",
+                link_model_papers: "Model Papers",
+
+                // Footer
+                footer_brand: "OpenLearn",
+                footer_sub: "Empowering Commerce Stream Students",
+                footer_copy: "© 2025 OpenLearn. All rights reserved."
+            },
+            si: {
+                brand_back: "මුල් පිටුවට",
+                header_tag: "විෂය ධාරා සම්පත්",
+                header_title: "වාණිජ ධාරාව",
+                // Updated description
+                header_desc: "ගිණුම්කරණය, ව්‍යාපාර අධ්‍යනය සහ ආර්ථික විද්‍යාව සඳහා පසුගිය ප්‍රශ්න පත්‍ර, ලකුණු ලබා දීමේ පටිපාටි සහ සටහන්.",
+                
+                // Tabs
+                tab_accounting: "ගිණුම්කරණය",
+                tab_business: "ව්‍යාපාර අධ්‍යනය",
+                tab_economics: "ආර්ථික විද්‍යාව",
+                
+                // Content Sections
+                accounting_title: "ගිණුම්කරණ සම්පත්",
+                accounting_subtitle: "ඉක්මන් ප්‍රවේශ සබැඳි",
+                business_title: "ව්‍යාපාර අධ්‍යන සම්පත්",
+                business_subtitle: "ඉක්මන් ප්‍රවේශ සබැඳි",
+                economics_title: "ආර්ථික විද්‍යා සම්පත්",
+                economics_subtitle: "ඉක්මන් ප්‍රවේශ සබැඳි",
+
+                // Common Resources (Quick Links)
+                res_syllabus: "විෂය නිර්දේශය",
+                res_guide: "ගුරු මාර්ගෝපදේශ",
+                res_notes: "කෙටි සටහන්",
+                res_notes_alt: "කළමනාකරණ සහ මානව සම්පත්", 
+                res_videos: "වීඩියෝ පාඩම්",
+                
+                // Exam Materials Links
+                papers_section_title: "විභාග ද්‍රව්‍ය සහ ප්‍රකාශන",
+                link_past_papers: "පසුගිය ප්‍රශ්න පත්‍ර",
+                link_marking_schemes: "ලකුණු ලබා දීමේ පටිපාටි",
+                link_school_papers: "පාසල් ප්‍රශ්න පත්‍ර",
+                link_provincial_papers: "පළාත් ප්‍රශ්න පත්‍ර",
+                link_pesuru_books: "පෙළපොත් / මාර්ගෝපදේශ",
+                link_model_papers: "ආදර්ශ ප්‍රශ්න පත්‍ර",
+
+                // Footer
+                footer_brand: "OpenLearn",
+                footer_sub: "වාණිජ ධාරා සිසුන් බලගැන්වීම",
+                footer_copy: "© 2025 OpenLearn. සියලුම හිමිකම් ඇවිරිණි." 
+            }
+        };
+
+        let currentLang = 'en';
+
+        // Set initial state on load.
+        window.onload = () => {
+             // 1. Initialize Lucide Icons
+             lucide.createIcons();
+             // 2. Ensure the first tab ('accounting') is active and visible
+             switchTab('accounting');
+             // 3. Ensure the initial language label is correct (English -> Button says 'සිංහල')
+             document.getElementById('lang-label').innerText = "සිංහල";
+        }
+
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'si' : 'en';
+            
+            // Update Body Class for Font
+            if (currentLang === 'si') {
+                document.body.classList.add('sinhala');
+                document.getElementById('lang-label').innerText = "English";
+            } else {
+                document.body.classList.remove('sinhala');
+                document.getElementById('lang-label').innerText = "සිංහල";
+            }
+
+            // Update all text elements with data-key
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translationKey = translations[currentLang][key];
+
+                if (translationKey !== undefined) {
+                    el.innerText = translationKey;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
