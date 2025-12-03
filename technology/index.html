@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technology Stream Resources - OpenLearn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        body.sinhala { font-family: 'Noto Sans Sinhala', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Merriweather', serif; }
+        body.sinhala h1, body.sinhala h2, body.sinhala h3, body.sinhala h4 { font-family: 'Noto Sans Sinhala', sans-serif; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .hero-bg {
+            /* Adjusted for Technology theme (dark blue/purple base) */
+            background-color: #0f172a;
+            background-image: radial-gradient(at 0% 0%, hsla(270,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(280,39%,30%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(200,39%,30%,1) 0, transparent 50%);
+        }
+        .active-tab {
+            background-color: #f97316; /* Orange-600 for the active stream tab */
+            color: white;
+            border-color: #f97316;
+        }
+        .inactive-tab {
+            background-color: white;
+            color: #475569;
+            border-color: #e2e8f0;
+        }
+        .inactive-tab:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/20 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-3">
+                    <a href="index.html" class="flex items-center gap-3 group">
+                        <div class="bg-orange-600 p-2 rounded-lg text-white shadow-lg shadow-orange-600/20 group-hover:bg-orange-700 transition">
+                            <i data-lucide="arrow-left" class="h-6 w-6"></i>
+                        </div>
+                        <span href="/index.html" class="text-xl font-bold text-slate-900 tracking-tight group-hover:text-orange-700 transition" data-key="brand_back">Back to Home</span>
+                    </a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleLanguage()" class="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium text-slate-600 hover:bg-slate-100 transition border border-slate-200">
+                        <i data-lucide="languages" class="h-4 w-4"></i>
+                        <span id="lang-label">සිංහල</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="pt-32 pb-16 hero-bg text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-orange-600/20 rounded-full blur-3xl translate-y-1/2 translate-x-1/2"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-orange-900/50 border border-orange-500/30 text-orange-200 text-sm font-medium mb-6">
+                <i data-lucide="hard-hat" class="h-4 w-4"></i>
+                <span data-key="header_tag">Stream Resources</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" data-key="header_title">Technology Stream</h1>
+            <p class="text-slate-300 max-w-2xl mx-auto text-lg font-light" data-key="header_desc">
+                Comprehensive collection of past papers, marking schemes, and notes for Engineering Technology, Bio Systems Technology, Science for Technology, and Information & Communication Technology (ICT).
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 -mt-8 relative z-20">
+        
+        <!-- Subject Tabs -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+            <!-- ENGINEERING TECHNOLOGY (Red Theme) -->
+            <button onclick="switchTab('engineering')" id="tab-engineering" class="active-tab px-4 py-2.5 rounded-xl font-semibold shadow-lg transition-all flex items-center gap-2 text-base md:text-lg">
+                <i data-lucide="wrench" class="h-5 w-5"></i>
+                <span data-key="tab_engineering">Engineering Technology</span>
+            </button>
+            <!-- BIO SYSTEMS TECHNOLOGY (Teal Theme) -->
+            <button onclick="switchTab('biosystems')" id="tab-biosystems" class="inactive-tab px-4 py-2.5 rounded-xl font-semibold shadow-sm border transition-all flex items-center gap-2 text-base md:text-lg">
+                <i data-lucide="droplet" class="h-5 w-5"></i>
+                <span data-key="tab_biosystems">Bio Systems Technology</span>
+            </button>
+            <!-- SCIENCE FOR TECHNOLOGY (Purple Theme) -->
+            <button onclick="switchTab('sft')" id="tab-sft" class="inactive-tab px-4 py-2.5 rounded-xl font-semibold shadow-sm border transition-all flex items-center gap-2 text-base md:text-lg">
+                <i data-lucide="cpu" class="h-5 w-5"></i>
+                <span data-key="tab_sft">Science for Technology</span>
+            </button>
+            <!-- ICT (Fuchsia Theme) -->
+            <button onclick="switchTab('ict')" id="tab-ict" class="inactive-tab px-4 py-2.5 rounded-xl font-semibold shadow-sm border transition-all flex items-center gap-2 text-base md:text-lg">
+                <i data-lucide="code" class="h-5 w-5"></i>
+                <span data-key="tab_ict">ICT</span>
+            </button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden min-h-[500px]">
+            
+            <!-- ENGINEERING TECHNOLOGY SECTION (RED THEME) -->
+            <div id="content-engineering" class="p-6 md:p-8 animate-fade-in">
+                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800" data-key="engineering_title">Engineering Technology Resources</h2>
+                        <p class="text-slate-500 text-sm mt-1" data-key="engineering_subtitle">Quick Access Links</p>
+                    </div>
+                    <div class="bg-red-50 p-3 rounded-full text-red-600 hidden md:block">
+                        <i data-lucide="wrench" class="h-8 w-8"></i>
+                    </div>
+                </div>
+
+                <!-- Quick Links Grid (4 columns) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <!-- Links for Engineering Technology (Placeholder URLs used) -->
+                    <a href="https://drive.google.com/file/d/1IVJYU9pmj3knX2fbS8TAiAwjta1IjEAZ/view?usp=sharing" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-red-300 hover:shadow-md transition group">
+                        <div class="bg-red-100 p-2.5 rounded-lg text-red-600 group-hover:bg-red-600 group-hover:text-white transition">
+                            <i data-lucide="book" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-red-700 transition" data-key="res_syllabus">Syllabus</h3>
+                            <p class="text-xs text-slate-500 mt-1">Updated Curriculum</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://techlogiclk.com/et-syllabus-teacher-guid/" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-red-300 hover:shadow-md transition group">
+                        <div class="bg-red-100 p-2.5 rounded-lg text-red-600 group-hover:bg-red-600 group-hover:text-white transition">
+                            <i data-lucide="file-text" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-red-700 transition" data-key="res_guide">Teachers' Guide</h3>
+                            <p class="text-xs text-slate-500 mt-1">Grades 12 & 13</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://techlogiclk.com/e-tech-notes-2/" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-red-300 hover:shadow-md transition group">
+                        <div class="bg-red-100 p-2.5 rounded-lg text-red-600 group-hover:bg-red-600 group-hover:text-white transition">
+                            <i data-lucide="sticky-note" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-red-700 transition" data-key="res_notes">Short Notes</h3>
+                            <p class="text-xs text-slate-500 mt-1">Quick Revision</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-red-300 hover:shadow-md transition group">
+                        <div class="bg-red-100 p-2.5 rounded-lg text-red-600 group-hover:bg-red-600 group-hover:text-white transition">
+                            <i data-lucide="youtube" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-red-700 transition" data-key="res_videos">Video Lessons</h3>
+                            <p class="text-xs text-slate-500 mt-1">Tutorials & Explanations</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Exam Materials Grid -->
+                <div class="mb-6 pt-4 border-t border-slate-100">
+                    <h3 class="text-xl font-bold mb-4 text-slate-700" data-key="papers_section_title">Exam Materials & Publications</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- Past Papers -->
+                        <a href="https://techlogiclk.com/e-tech-past-papers/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-red-50 border border-red-200 hover:bg-red-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="folder-archive" class="h-6 w-6 text-red-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_past_papers">Past Papers</span>
+                        </a>
+                        <!-- Marking Schemes -->
+                        <a href="https://techlogiclk.com/e-tech-past-papers/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-red-50 border border-red-200 hover:bg-red-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="check-square" class="h-6 w-6 text-red-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_marking_schemes">Marking Schemes</span>
+                        </a>
+                        <!-- School Papers -->
+                        <a href="https://techlogiclk.com/e-tech-model-papers/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-red-50 border border-red-200 hover:bg-red-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="school" class="h-6 w-6 text-red-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_school_papers">School Papers</span>
+                        </a>
+                        <!-- Provincial Papers -->
+                        <a href="https://techlogiclk.com/et-school-papers/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-red-50 border border-red-200 hover:bg-red-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="map-pin" class="h-6 w-6 text-red-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_provincial_papers">Provincial Papers</span>
+                        </a>
+                        <!-- Pesuru Books -->
+                        <a href="https://techlogiclk.com/et-books-et-%e0%b6%8b%e0%b6%b4%e0%b6%9a%e0%b7%8f%e0%b6%bb%e0%b6%9a-%e0%b6%b4%e0%b7%9c%e0%b6%ad%e0%b7%8a/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-red-50 border border-red-200 hover:bg-red-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="notebook-pen" class="h-6 w-6 text-red-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_pesuru_books">Textbooks / Guides</span>
+                        </a>
+                        <!-- Model Papers -->
+                        <a href="https://drive.google.com/file/d/1OVyZ-jzF_Nbsb-ChFGwfJR4KtMhyiT-r/view?usp=drive_link" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-red-50 border border-red-200 hover:bg-red-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="gantt-chart" class="h-6 w-6 text-red-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_model_papers">Model Papers</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BIO SYSTEMS TECHNOLOGY SECTION (TEAL THEME) -->
+            <div id="content-biosystems" class="p-6 md:p-8 hidden animate-fade-in">
+                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800" data-key="biosystems_title">Bio Systems Technology Resources</h2>
+                        <p class="text-slate-500 text-sm mt-1" data-key="biosystems_subtitle">Quick Access Links</p>
+                    </div>
+                    <div class="bg-teal-50 p-3 rounded-full text-teal-600 hidden md:block">
+                        <i data-lucide="droplet" class="h-8 w-8"></i>
+                    </div>
+                </div>
+
+                <!-- Quick Links Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <!-- Links for Bio Systems Technology (Placeholder URLs used) -->
+                    <a href="https://drive.google.com/file/d/1l00WybdyTlzryY-mRWJiAtcNyav_CtvH/view?usp=sharing" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-teal-300 hover:shadow-md transition group">
+                        <div class="bg-teal-100 p-2.5 rounded-lg text-teal-600 group-hover:bg-teal-600 group-hover:text-white transition">
+                            <i data-lucide="book" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-teal-700 transition" data-key="res_syllabus">Syllabus</h3>
+                            <p class="text-xs text-slate-500 mt-1">Updated Curriculum</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://techlogiclk.com/bst-syllabus-teacher-guide/" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-teal-300 hover:shadow-md transition group">
+                        <div class="bg-teal-100 p-2.5 rounded-lg text-teal-600 group-hover:bg-teal-600 group-hover:text-white transition">
+                            <i data-lucide="file-text" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-teal-700 transition" data-key="res_guide">Teachers' Guide</h3>
+                            <p class="text-xs text-slate-500 mt-1">Grades 12 & 13</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://techlogiclk.com/bst-notes/" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-teal-300 hover:shadow-md transition group">
+                        <div class="bg-teal-100 p-2.5 rounded-lg text-teal-600 group-hover:bg-teal-600 group-hover:text-white transition">
+                            <i data-lucide="leaf" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-teal-700 transition" data-key="res_notes_alt">Notes</h3>
+                            <p class="text-xs text-slate-500 mt-1">Farming & Bio</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-teal-300 hover:shadow-md transition group">
+                        <div class="bg-teal-100 p-2.5 rounded-lg text-teal-600 group-hover:bg-teal-600 group-hover:text-white transition">
+                            <i data-lucide="youtube" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-teal-700 transition" data-key="res_videos">Video Lessons</h3>
+                            <p class="text-xs text-slate-500 mt-1">Tutorials & Explanations</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Exam Materials Grid -->
+                <div class="mb-6 pt-4 border-t border-slate-100">
+                    <h3 class="text-xl font-bold mb-4 text-slate-700" data-key="papers_section_title">Exam Materials & Publications</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- Past Papers -->
+                        <a href="https://pastpapers.wiki/category/a-l-technology/a-l-bio-system-technology/?swcfpc=1" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-teal-50 border border-teal-200 hover:bg-teal-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="folder-archive" class="h-6 w-6 text-teal-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_past_papers">Past Papers</span>
+                        </a>
+                        <!-- Marking Schemes -->
+                        <a href="https://pastpapers.wiki/category/a-l-technology/a-l-bio-system-technology/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-teal-50 border border-teal-200 hover:bg-teal-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="check-square" class="h-6 w-6 text-teal-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_marking_schemes">Marking Schemes</span>
+                        </a>
+                        <!-- School Papers -->
+                        <a href="https://techlogiclk.com/bst-papers/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-teal-50 border border-teal-200 hover:bg-teal-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="school" class="h-6 w-6 text-teal-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_school_papers">School Papers</span>
+                        </a>
+                        <!-- Provincial Papers -->
+                        <a href="https://govdoc.lk/category/term-test-papers/bio-systems-technology" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-teal-50 border border-teal-200 hover:bg-teal-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="map-pin" class="h-6 w-6 text-teal-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_provincial_papers">Provincial Papers</span>
+                        </a>
+                        <!-- Pesuru Books -->
+                        <a href="https://techlogiclk.com/bst-notes/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-teal-50 border border-teal-200 hover:bg-teal-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="notebook-pen" class="h-6 w-6 text-teal-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_pesuru_books">Textbooks / Guides</span>
+                        </a>
+                        <!-- Model Papers -->
+                        <a href="#" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-teal-50 border border-teal-200 hover:bg-teal-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="gantt-chart" class="h-6 w-6 text-teal-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_model_papers">Model Papers</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCIENCE FOR TECHNOLOGY SECTION (PURPLE THEME) -->
+            <div id="content-sft" class="p-6 md:p-8 hidden animate-fade-in">
+                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800" data-key="sft_title">Science for Technology Resources</h2>
+                        <p class="text-slate-500 text-sm mt-1" data-key="sft_subtitle">Quick Access Links</p>
+                    </div>
+                    <div class="bg-purple-50 p-3 rounded-full text-purple-600 hidden md:block">
+                        <i data-lucide="cpu" class="h-8 w-8"></i>
+                    </div>
+                </div>
+
+                <!-- Quick Links Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <!-- Links for SFT (Placeholder URLs used) -->
+                    <a href="https://drive.google.com/file/d/1fMm1tSGdDbity4oaHPuBb0TF7kqxhqoD/view?usp=drive_link" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-purple-300 hover:shadow-md transition group">
+                        <div class="bg-purple-100 p-2.5 rounded-lg text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition">
+                            <i data-lucide="book" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-purple-700 transition" data-key="res_syllabus">Syllabus</h3>
+                            <p class="text-xs text-slate-500 mt-1">Updated Curriculum</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://drive.google.com/file/d/1EWTqB_4n7yQ3y6uxvaappgwzgZDwmkS4/view?usp=drive_link" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-purple-300 hover:shadow-md transition group">
+                        <div class="bg-purple-100 p-2.5 rounded-lg text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition">
+                            <i data-lucide="file-text" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-purple-700 transition" data-key="res_guide">Teachers' Guide</h3>
+                            <p class="text-xs text-slate-500 mt-1">Grades 12 & 13</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://drive.google.com/drive/folders/1bGK2qGden2gPDM_s6jrFC79dbGYUDWHl" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-purple-300 hover:shadow-md transition group">
+                        <div class="bg-purple-100 p-2.5 rounded-lg text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition">
+                            <i data-lucide="sigma" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-purple-700 transition" data-key="res_notes">Short Notes</h3>
+                            <p class="text-xs text-slate-500 mt-1">Physics, Chemistry, Maths</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-purple-300 hover:shadow-md transition group">
+                        <div class="bg-purple-100 p-2.5 rounded-lg text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition">
+                            <i data-lucide="youtube" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-purple-700 transition" data-key="res_videos">Video Lessons</h3>
+                            <p class="text-xs text-slate-500 mt-1">Tutorials & Explanations</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Exam Materials Grid -->
+                <div class="mb-6 pt-4 border-t border-slate-100">
+                    <h3 class="text-xl font-bold mb-4 text-slate-700" data-key="papers_section_title">Exam Materials & Publications</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- Past Papers -->
+                        <a href="https://drive.google.com/drive/folders/1H90WSOoOjc7eX3u-4ATYu5uvXXnBYx7w?usp=drive_link" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-purple-50 border border-purple-200 hover:bg-purple-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="folder-archive" class="h-6 w-6 text-purple-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_past_papers">Past Papers</span>
+                        </a>
+                        <!-- Marking Schemes -->
+                        <a href="https://drive.google.com/drive/folders/1hNpbUm2W2VtNYHMs2miYJ0cmx2Opt76V?usp=drive_link" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-purple-50 border border-purple-200 hover:bg-purple-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="check-square" class="h-6 w-6 text-purple-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_marking_schemes">Marking Schemes</span>
+                        </a>
+                        <!-- School Papers -->
+                        <a href="#" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-purple-50 border border-purple-200 hover:bg-purple-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="school" class="h-6 w-6 text-purple-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_school_papers">School Papers</span>
+                        </a>
+                        <!-- Provincial Papers -->
+                        <a href="https://drive.google.com/drive/folders/1qqzV67Vh5UVIzxSHUC9UCfnaZCWLJ5zj?usp=drive_link" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-purple-50 border border-purple-200 hover:bg-purple-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="map-pin" class="h-6 w-6 text-purple-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_provincial_papers">Provincial Papers</span>
+                        </a>
+                        <!-- Pesuru Books -->
+                        <a href="https://techlogiclk.com/sft-books/" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-purple-50 border border-purple-200 hover:bg-purple-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="notebook-pen" class="h-6 w-6 text-purple-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_pesuru_books">Textbooks / Guides</span>
+                        </a>
+                        <!-- Model Papers -->
+                        <a href="https://drive.google.com/drive/folders/1kD8eBhw31UfEhCUhqGyMOSr2BKUgRb4z?usp=drive_link" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-purple-50 border border-purple-200 hover:bg-purple-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="gantt-chart" class="h-6 w-6 text-purple-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_model_papers">Model Papers</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ICT SECTION (FUCHSIA THEME) -->
+            <div id="content-ict" class="p-6 md:p-8 hidden animate-fade-in">
+                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800" data-key="ict_title">ICT Resources</h2>
+                        <p class="text-slate-500 text-sm mt-1" data-key="ict_subtitle">Quick Access Links</p>
+                    </div>
+                    <div class="bg-fuchsia-50 p-3 rounded-full text-fuchsia-600 hidden md:block">
+                        <i data-lucide="code" class="h-8 w-8"></i>
+                    </div>
+                </div>
+
+                <!-- Quick Links Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <!-- Links for ICT (Placeholder URLs used) -->
+                    <a href="https://nie.lk/pdffiles/tg/eALSyl%20ICT.pdf" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-fuchsia-300 hover:shadow-md transition group">
+                        <div class="bg-fuchsia-100 p-2.5 rounded-lg text-fuchsia-600 group-hover:bg-fuchsia-600 group-hover:text-white transition">
+                            <i data-lucide="book" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-fuchsia-700 transition" data-key="res_syllabus">Syllabus</h3>
+                            <p class="text-xs text-slate-500 mt-1">Updated Curriculum</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://drive.google.com/file/d/1xAISbG2h4xXqWh9Ui3XiX-HET0IhN2RN/view?usp=drive_link" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-fuchsia-300 hover:shadow-md transition group">
+                        <div class="bg-fuchsia-100 p-2.5 rounded-lg text-fuchsia-600 group-hover:bg-fuchsia-600 group-hover:text-white transition">
+                            <i data-lucide="file-text" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-fuchsia-700 transition" data-key="res_guide">Teachers' Guide</h3>
+                            <p class="text-xs text-slate-500 mt-1">Grades 12 & 13</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://drive.google.com/drive/folders/1bCqdz9u8JWin0Giv_KkYgO-HO1r9jRyy" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-fuchsia-300 hover:shadow-md transition group">
+                        <div class="bg-fuchsia-100 p-2.5 rounded-lg text-fuchsia-600 group-hover:bg-fuchsia-600 group-hover:text-white transition">
+                            <i data-lucide="terminal" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-fuchsia-700 transition" data-key="res_notes">Short Notes</h3>
+                            <p class="text-xs text-slate-500 mt-1">Networking & Programming</p>
+                        </div>
+                    </a>
+
+                    <a href="https://t.me/ICTFROMABC_RJ" class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-fuchsia-300 hover:shadow-md transition group">
+                        <div class="bg-fuchsia-100 p-2.5 rounded-lg text-fuchsia-600 group-hover:bg-fuchsia-600 group-hover:text-white transition">
+                            <i data-lucide="youtube" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 group-hover:text-fuchsia-700 transition" data-key="res_videos">Video Lessons</h3>
+                            <p class="text-xs text-slate-500 mt-1">Tutorials & Explanations</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Exam Materials Grid -->
+                <div class="mb-6 pt-4 border-t border-slate-100">
+                    <h3 class="text-xl font-bold mb-4 text-slate-700" data-key="papers_section_title">Exam Materials & Publications</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- Past Papers -->
+                        <a href="https://alapiedu.com/Category/paper_hub/PaperSubject?subject=ICT&search=&paper_type=Past+Paper" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-fuchsia-50 border border-fuchsia-200 hover:bg-fuchsia-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="folder-archive" class="h-6 w-6 text-fuchsia-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_past_papers">Past Papers</span>
+                        </a>
+                        <!-- Marking Schemes -->
+                        <a href="https://www.alapiedu.com/Category/marking_hub/MarkingSubject?subject=ICT" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-fuchsia-50 border border-fuchsia-200 hover:bg-fuchsia-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="check-square" class="h-6 w-6 text-fuchsia-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_marking_schemes">Marking Schemes</span>
+                        </a>
+                        <!-- School Papers -->
+                        <a href="https://alapiedu.com/Category/paper_hub/PaperSubject?subject=ICT&search=&paper_type=School+Paper" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-fuchsia-50 border border-fuchsia-200 hover:bg-fuchsia-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="school" class="h-6 w-6 text-fuchsia-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_school_papers">School Papers</span>
+                        </a>
+                        <!-- Provincial Papers -->
+                        <a href="https://alapiedu.com/Category/paper_hub/PaperSubject?subject=ICT&search=&paper_type=Province+Paper" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-fuchsia-50 border border-fuchsia-200 hover:bg-fuchsia-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="map-pin" class="h-6 w-6 text-fuchsia-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_provincial_papers">Provincial Papers</span>
+                        </a>
+                        <!-- Pesuru Books -->
+                        <a href="https://drive.google.com/drive/folders/1mPdYHQHH4LO_eWINv9vEUkfdPZ2bxe5v" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-fuchsia-50 border border-fuchsia-200 hover:bg-fuchsia-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="notebook-pen" class="h-6 w-6 text-fuchsia-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_pesuru_books">Textbooks / Guides</span>
+                        </a>
+                        <!-- Model Papers -->
+                        <a href="https://alapiedu.com/Category/paper_hub/PaperSubject?subject=ICT&search=&paper_type=Model+Paper" class="flex flex-col items-center justify-center p-4 text-center rounded-xl bg-fuchsia-50 border border-fuchsia-200 hover:bg-fuchsia-100 transition group shadow-sm hover:shadow-md">
+                            <i data-lucide="gantt-chart" class="h-6 w-6 text-fuchsia-600 mb-1 group-hover:scale-105 transition"></i>
+                            <span class="font-medium text-slate-800 text-sm" data-key="link_model_papers">Model Papers</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex items-center justify-center gap-2 text-white mb-4">
+                <i data-lucide="graduation-cap" class="h-6 w-6 text-orange-500"></i>
+                <span class="text-lg font-bold" data-key="footer_brand">OpenLearn</span>
+            </div>
+            <p class="text-slate-500 text-sm mb-4" data-key="footer_sub">Empowering Technology Stream Students</p>
+            <p class="text-xs text-slate-600" data-key="footer_copy">© 2025 OpenLearn. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // --- Tabs Logic ---
+        function switchTab(subject) {
+            // Updated list of all subjects (General English removed)
+            ['engineering', 'biosystems', 'sft', 'ict'].forEach(s => {
+                const content = document.getElementById(`content-${s}`);
+                const tab = document.getElementById(`tab-${s}`);
+                if (content) content.classList.add('hidden');
+                if (tab) {
+                    tab.classList.remove('active-tab');
+                    tab.classList.add('inactive-tab');
+                }
+            });
+
+            // Show selected
+            const activeContent = document.getElementById(`content-${subject}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+            
+            // Update Tab Styles
+            const activeBtn = document.getElementById(`tab-${subject}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('inactive-tab');
+                activeBtn.classList.add('active-tab');
+            }
+        }
+
+        // --- Translation Logic ---
+        const translations = {
+            en: {
+                brand_back: "Back to Home",
+                header_tag: "Stream Resources",
+                header_title: "Technology Stream",
+                header_desc: "Comprehensive collection of past papers, marking schemes, and notes for Engineering Technology, Bio Systems Technology, Science for Technology, and Information & Communication Technology (ICT).",
+                
+                // Tabs
+                tab_engineering: "Engineering Technology",
+                tab_biosystems: "Bio Systems Technology",
+                tab_sft: "Science for Technology",
+                tab_ict: "ICT", 
+                
+                // Content Sections
+                engineering_title: "Engineering Technology Resources",
+                engineering_subtitle: "Quick Access Links",
+                biosystems_title: "Bio Systems Technology Resources",
+                biosystems_subtitle: "Quick Access Links",
+                sft_title: "Science for Technology Resources",
+                sft_subtitle: "Quick Access Links",
+                ict_title: "ICT Resources",
+                ict_subtitle: "Quick Access Links",
+
+
+                // Common Resources (Quick Links)
+                res_syllabus: "Syllabus",
+                res_guide: "Teachers' Guide",
+                res_notes: "Short Notes", 
+                res_notes_alt: "Theory and Practical", 
+                res_videos: "Video Lessons", 
+                
+                // Exam Materials Links
+                papers_section_title: "Exam Materials & Publications",
+                link_past_papers: "Past Papers",
+                link_marking_schemes: "Marking Schemes",
+                link_school_papers: "School Papers",
+                link_provincial_papers: "Provincial Papers",
+                link_pesuru_books: "Textbooks / Guides",
+                link_model_papers: "Model Papers",
+
+                // Footer
+                footer_brand: "OpenLearn",
+                footer_sub: "Empowering Technology Stream Students",
+                footer_copy: "© 2025 OpenLearn. All rights reserved."
+            },
+            si: {
+                brand_back: "මුල් පිටුවට",
+                header_tag: "විෂය ධාරා සම්පත්",
+                header_title: "තාක්ෂණවේද ධාරාව",
+                header_desc: "ඉංජිනේරු තාක්ෂණවේදය, ජෛව පද්ධති තාක්ෂණවේදය, තාක්ෂණය සඳහා විද්‍යාව සහ තොරතුරු තාක්ෂණය සඳහා පසුගිය ප්‍රශ්න පත්‍ර, ලකුණු ලබා දීමේ පටිපාටි සහ සටහන්.",
+                
+                // Tabs
+                tab_engineering: "ඉංජිනේරු තාක්ෂණවේදය",
+                tab_biosystems: "ජෛව පද්ධති තාක්ෂණවේදය",
+                tab_sft: "තාක්ෂණය සඳහා විද්‍යාව",
+                tab_ict: "තොරතුරු තාක්ෂණය",
+                
+                // Content Sections
+                engineering_title: "ඉංජිනේරු තාක්ෂණවේදය සම්පත්",
+                engineering_subtitle: "ඉක්මන් ප්‍රවේශ සබැඳි",
+                biosystems_title: "ජෛව පද්ධති තාක්ෂණවේදය සම්පත්",
+                biosystems_subtitle: "ඉක්මන් ප්‍රවේශ සබැඳි",
+                sft_title: "තාක්ෂණය සඳහා විද්‍යාව සම්පත්",
+                sft_subtitle: "ඉක්මන් ප්‍රවේශ සබැඳි",
+                ict_title: "තොරතුරු තාක්ෂණ සම්පත්",
+                ict_subtitle: "ඉක්මන් ප්‍රවේශ සබැඳි",
+
+                // Common Resources (Quick Links)
+                res_syllabus: "විෂය නිර්දේශය",
+                res_guide: "ගුරු මාර්ගෝපදේශ",
+                res_notes: "කෙටි සටහන්",
+                res_notes_alt: "න්‍යාය සහ ප්‍රායෝගික",
+                res_videos: "වීඩියෝ පාඩම්",
+                
+                // Exam Materials Links
+                papers_section_title: "විභාග ද්‍රව්‍ය සහ ප්‍රකාශන",
+                link_past_papers: "පසුගිය ප්‍රශ්න පත්‍ර",
+                link_marking_schemes: "ලකුණු ලබා දීමේ පටිපාටි",
+                link_school_papers: "පාසල් ප්‍රශ්න පත්‍ර",
+                link_provincial_papers: "පළාත් ප්‍රශ්න පත්‍ර",
+                link_pesuru_books: "පෙළපොත් / මාර්ගෝපදේශ",
+                link_model_papers: "ආදර්ශ ප්‍රශ්න පත්‍ර",
+
+                // Footer
+                footer_brand: "OpenLearn",
+                footer_sub: "තාක්ෂණවේද ධාරා සිසුන් බලගැන්වීම",
+                footer_copy: "විශිෂ්ටත්වය සඳහා නිර්මාණය කරන ලදී. විභාගයට ජය!"
+            }
+        };
+
+        let currentLang = 'en';
+
+        // Set initial state on load.
+        window.onload = () => {
+             // 1. Initialize Lucide Icons
+             lucide.createIcons();
+             // 2. Ensure the first tab ('engineering') is active and visible
+             switchTab('engineering');
+             // 3. Ensure the initial language label is correct (English -> Button says 'සිංහල')
+             document.getElementById('lang-label').innerText = "සිංහල";
+        }
+
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'si' : 'en';
+            
+            // Update Body Class for Font
+            if (currentLang === 'si') {
+                document.body.classList.add('sinhala');
+                document.getElementById('lang-label').innerText = "English";
+            } else {
+                document.body.classList.remove('sinhala');
+                document.getElementById('lang-label').innerText = "සිංහල";
+            }
+
+            // Update all text elements with data-key
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translationKey = translations[currentLang][key];
+
+                if (translationKey !== undefined) {
+                    el.innerText = translationKey;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
