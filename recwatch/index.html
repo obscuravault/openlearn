@@ -99,7 +99,7 @@
                 <div id="player"></div>
                 
                 <!-- Interaction & Controls Layer -->
-                <div id="controls-overlay" onmousemove="resetTimer()" onclick="handleOverlayClick(event)">
+                <div id="controls-overlay" onmousemove="resetTimer()" onmousedown="resetTimer()" onclick="handleOverlayClick(event)">
                     
                     <!-- Feedback Center -->
                     <div id="feedback-indicator">
@@ -206,11 +206,14 @@
             const overlay = document.getElementById('controls-overlay');
             if(!overlay) return;
             
+            // Immediately show controls and reset hide timer
             overlay.classList.remove('controls-hidden', 'hide-cursor');
             clearTimeout(hideTimeout);
             
+            // Only auto-hide if the video is currently playing
             if (player && typeof player.getPlayerState === 'function') {
-                if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                const state = player.getPlayerState();
+                if (state === YT.PlayerState.PLAYING) {
                     hideTimeout = setTimeout(() => {
                         overlay.classList.add('controls-hidden', 'hide-cursor');
                     }, 3000);
@@ -299,6 +302,7 @@
             const state = player.getPlayerState();
             if (state == YT.PlayerState.PLAYING) { player.pauseVideo(); showFeedback(icons.pause); }
             else { player.playVideo(); showFeedback(icons.play); }
+            resetTimer(); // Ensure controls are shown when state changes
         }
 
         function toggleMute() {
@@ -314,24 +318,28 @@
                 document.getElementById('mute-icon').classList.remove('hidden');
                 showFeedback(icons.mute);
             }
+            resetTimer();
         }
 
         function changeVolume(val) {
             if (!player || typeof player.setVolume !== 'function') return;
             player.setVolume(val);
             if (val == 0) player.mute(); else player.unMute();
+            resetTimer();
         }
 
         function changeSpeed(val) { 
             if (player && typeof player.setPlaybackRate === 'function') {
                 player.setPlaybackRate(parseFloat(val)); 
             }
+            resetTimer();
         }
 
         function toggleFullscreen() {
             const elem = document.getElementById('video-container');
             if (!document.fullscreenElement) elem.requestFullscreen().catch(e => console.error(e));
             else document.exitFullscreen();
+            resetTimer();
         }
 
         document.addEventListener('keydown', (e) => {
@@ -341,6 +349,7 @@
                 case 'KeyM': toggleMute(); break;
                 case 'KeyF': toggleFullscreen(); break;
             }
+            resetTimer(); // Keyboard interaction should also show controls
         });
 
         function handleOverlayClick(e) {
