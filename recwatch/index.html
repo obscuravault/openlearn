@@ -94,22 +94,6 @@
             position: relative;
             z-index: 25;
         }
-        /* Touch zones for skip (hidden visually but active) */
-        .skip-zone {
-            position: absolute;
-            top: 0;
-            width: 30%;
-            height: 100%;
-            z-index: 21;
-            cursor: pointer;
-            opacity: 0; /* Hidden but still active */
-        }
-        .skip-left {
-            left: 0;
-        }
-        .skip-right {
-            right: 0;
-        }
         /* Swipe indicator */
         .swipe-indicator {
             position: absolute;
@@ -158,10 +142,6 @@
         <div id="player-section" class="hidden space-y-6">
             <div id="video-container" class="rounded-xl overflow-hidden shadow-2xl border border-slate-700 group relative">
                 <div id="player"></div>
-                
-                <!-- Hidden Skip Zones for Touch/Mouse (invisible but active) -->
-                <div class="skip-zone skip-left" onclick="skipBackward(); event.stopPropagation();" title="Skip Backward 5s"></div>
-                <div class="skip-zone skip-right" onclick="skipForward(); event.stopPropagation();" title="Skip Forward 5s"></div>
                 
                 <!-- Swipe Instruction (shows on mobile) -->
                 <div class="swipe-indicator md:hidden">← Swipe Left/Right to Skip →</div>
@@ -604,9 +584,8 @@
             e.preventDefault();
             e.stopPropagation();
             
-            // Don't toggle play if clicking on skip zones or buttons
-            if (e.target.closest('.skip-zone') || 
-                e.target.closest('button') || 
+            // Don't toggle play if clicking on buttons or form elements
+            if (e.target.closest('button') || 
                 e.target.closest('select') || 
                 e.target.closest('input')) {
                 return;
