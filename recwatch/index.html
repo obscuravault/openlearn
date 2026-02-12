@@ -65,6 +65,27 @@
             transition: opacity 0.2s;
             z-index: 30;
         }
+        /* Skip feedback indicator */
+        #skip-feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 35;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid rgba(59, 130, 246, 0.5);
+        }
         /* Ensure buttons are clickable */
         #controls-overlay button,
         #controls-overlay select,
@@ -72,6 +93,56 @@
             pointer-events: auto;
             position: relative;
             z-index: 25;
+        }
+        /* Touch zones for skip */
+        .skip-zone {
+            position: absolute;
+            top: 0;
+            width: 30%;
+            height: 100%;
+            z-index: 21;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            background: rgba(0,0,0,0.2);
+        }
+        #video-container:hover .skip-zone {
+            opacity: 0.5;
+        }
+        .skip-zone:hover {
+            opacity: 0.8 !important;
+            background: rgba(0,0,0,0.4);
+        }
+        .skip-left {
+            left: 0;
+        }
+        .skip-right {
+            right: 0;
+        }
+        .skip-icon {
+            background: rgba(0,0,0,0.6);
+            border-radius: 50%;
+            padding: 12px;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+        /* Swipe indicator */
+        .swipe-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 36;
+            border: 1px solid rgba(255,255,255,0.2);
         }
     </style>
 </head>
@@ -98,25 +169,55 @@
                 <p id="error-msg" class="text-red-400 text-sm hidden">Invalid YouTube URL.</p>
             </div>
             <div class="text-xs text-slate-500 bg-slate-900/50 p-3 rounded border border-slate-700">
-                <strong>Shortcuts:</strong> [Space] Play/Pause • [M] Mute • [F] Fullscreen • [Double Tap] Toggle Play
+                <strong>Shortcuts:</strong> [Space] Play/Pause • [←] [→] Skip 5s • [M] Mute • [F] Fullscreen • [Double Tap Left/Right] Skip
             </div>
         </div>
 
         <!-- Integrated Video Section -->
         <div id="player-section" class="hidden space-y-6">
-            <div id="video-container" class="rounded-xl overflow-hidden shadow-2xl border border-slate-700 group">
+            <div id="video-container" class="rounded-xl overflow-hidden shadow-2xl border border-slate-700 group relative">
                 <div id="player"></div>
+                
+                <!-- Skip Zones for Touch/Mouse -->
+                <div class="skip-zone skip-left" onclick="skipBackward(); event.stopPropagation();" title="Skip Backward 5s">
+                    <div class="skip-icon">
+                        <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
+                            <path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="skip-zone skip-right" onclick="skipForward(); event.stopPropagation();" title="Skip Forward 5s">
+                    <div class="skip-icon">
+                        <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
+                            <path d="M13 6v12l8.5-6L13 6zm-1.5 6l-8.5 6V6l8.5 6z"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Swipe Instruction (shows on mobile) -->
+                <div class="swipe-indicator md:hidden">← Swipe Left/Right to Skip →</div>
                 
                 <!-- Interaction & Controls Layer -->
                 <div id="controls-overlay" 
                      onmouseenter="resetTimer(true)" 
                      onmousemove="resetTimer(false)" 
                      onmousedown="resetTimer(false)" 
-                     onclick="handleOverlayClick(event)">
+                     onclick="handleOverlayClick(event)"
+                     ontouchstart="handleTouchStart(event)"
+                     ontouchmove="handleTouchMove(event)"
+                     ontouchend="handleTouchEnd(event)">
                     
                     <!-- Feedback Center -->
                     <div id="feedback-indicator">
                         <svg id="feedback-icon" class="w-12 h-12 text-white fill-current" viewBox="0 0 24 24"></svg>
+                    </div>
+                    
+                    <!-- Skip Feedback -->
+                    <div id="skip-feedback">
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                            <path id="skip-icon-path" d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/>
+                        </svg>
+                        <span id="skip-text">-5s</span>
                     </div>
 
                     <!-- Bottom Bar -->
@@ -127,7 +228,7 @@
                         </div>
 
                         <div class="flex items-center justify-between">
-                            <!-- Left: Play/Mute -->
+                            <!-- Left: Play/Mute/Time -->
                             <div class="flex items-center gap-4">
                                 <button onclick="togglePlay(); event.stopPropagation();" class="text-white hover:scale-110 transition-transform">
                                     <svg id="play-icon" class="w-7 h-7 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -144,6 +245,21 @@
                                            class="w-16 h-1 bg-white/20 rounded-lg appearance-none accent-white">
                                 </div>
                                 <span id="time-display" class="text-[10px] font-mono text-white/60">0:00 / 0:00</span>
+                            </div>
+
+                            <!-- Center: Skip Buttons -->
+                            <div class="flex items-center gap-2">
+                                <button onclick="skipBackward(); event.stopPropagation();" class="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition-all">
+                                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                                        <path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/>
+                                    </svg>
+                                </button>
+                                <span class="text-xs text-white/60">5s</span>
+                                <button onclick="skipForward(); event.stopPropagation();" class="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition-all">
+                                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                                        <path d="M13 6v12l8.5-6L13 6zm-1.5 6l-8.5 6V6l8.5 6z"/>
+                                    </svg>
+                                </button>
                             </div>
 
                             <!-- Right: Speed/FS -->
@@ -198,12 +314,19 @@
         let hideTimeout;
         let lastTap = 0;
         let currentVideoId = "";
+        
+        // Touch gesture variables
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const MIN_SWIPE_DISTANCE = 50;
 
         const icons = {
             play: "M8 5v14l11-7z",
             pause: "M6 19h4V5H6v14zm8-14v14h4V5h-4z",
             mute: "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z",
-            vol: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"
+            vol: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z",
+            skipBack: "M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z",
+            skipForward: "M13 6v12l8.5-6L13 6zm-1.5 6l-8.5 6V6l8.5 6z"
         };
 
         // --- Core Lifecycle ---
@@ -352,6 +475,106 @@
             if (event.data == YT.PlayerState.ENDED) completeSession();
         }
 
+        // --- Skip Functions ---
+        
+        function skipForward() {
+            if (!player || typeof player.getCurrentTime !== 'function') return;
+            const currentTime = player.getCurrentTime();
+            const duration = player.getDuration();
+            const newTime = Math.min(currentTime + 5, duration);
+            player.seekTo(newTime, true);
+            showSkipFeedback('forward', '+5s');
+            resetTimer(true);
+        }
+
+        function skipBackward() {
+            if (!player || typeof player.getCurrentTime !== 'function') return;
+            const currentTime = player.getCurrentTime();
+            const newTime = Math.max(currentTime - 5, 0);
+            player.seekTo(newTime, true);
+            showSkipFeedback('backward', '-5s');
+            resetTimer(true);
+        }
+
+        function showSkipFeedback(direction, text) {
+            const el = document.getElementById('skip-feedback');
+            const icon = document.getElementById('skip-icon-path');
+            const textEl = document.getElementById('skip-text');
+            
+            if (!el || !icon || !textEl) return;
+            
+            if (direction === 'forward') {
+                icon.setAttribute('d', icons.skipForward);
+            } else {
+                icon.setAttribute('d', icons.skipBack);
+            }
+            
+            textEl.innerText = text;
+            el.style.opacity = '1';
+            
+            clearTimeout(window.skipFeedbackTimeout);
+            window.skipFeedbackTimeout = setTimeout(() => {
+                el.style.opacity = '0';
+            }, 800);
+        }
+
+        // --- Touch Gesture Handlers ---
+
+        function handleTouchStart(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            // Prevent default to avoid page scroll while swiping on video
+            if (e.target.closest('#controls-overlay')) {
+                e.preventDefault();
+            }
+        }
+
+        function handleTouchMove(e) {
+            // Prevent default to avoid page scroll while swiping on video
+            if (e.target.closest('#controls-overlay')) {
+                e.preventDefault();
+            }
+        }
+
+        function handleTouchEnd(e) {
+            if (!player) return;
+            
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+            
+            // Check for double tap on touch devices
+            const now = Date.now();
+            if (now - lastTap < 300) {
+                // Double tap detected - check position for skip direction
+                const touchX = e.changedTouches[0].clientX;
+                const container = document.getElementById('video-container');
+                if (container) {
+                    const containerWidth = container.offsetWidth;
+                    if (touchX < containerWidth / 2) {
+                        skipBackward();
+                    } else {
+                        skipForward();
+                    }
+                }
+            }
+            lastTap = now;
+            
+            resetTimer(true);
+        }
+
+        function handleSwipe() {
+            const swipeDistance = touchEndX - touchStartX;
+            
+            if (Math.abs(swipeDistance) > MIN_SWIPE_DISTANCE) {
+                if (swipeDistance > 0) {
+                    // Swipe right - go backward
+                    skipBackward();
+                } else {
+                    // Swipe left - go forward
+                    skipForward();
+                }
+            }
+        }
+
         // --- Controls Logic ---
 
         function togglePlay() {
@@ -406,8 +629,16 @@
 
         document.addEventListener('keydown', (e) => {
             if (!player || document.getElementById('player-section').classList.contains('hidden')) return;
+            
+            // Prevent default behavior for arrow keys
+            if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+                e.preventDefault();
+            }
+            
             switch(e.code) {
                 case 'Space': e.preventDefault(); togglePlay(); break;
+                case 'ArrowLeft': skipBackward(); break;
+                case 'ArrowRight': skipForward(); break;
                 case 'KeyM': toggleMute(); break;
                 case 'KeyF': toggleFullscreen(); break;
             }
@@ -419,9 +650,30 @@
             e.preventDefault();
             e.stopPropagation();
             
+            // Don't toggle play if clicking on skip zones or buttons
+            if (e.target.closest('.skip-zone') || 
+                e.target.closest('button') || 
+                e.target.closest('select') || 
+                e.target.closest('input')) {
+                return;
+            }
+            
             const now = Date.now();
-            if (now - lastTap < 300) toggleFullscreen();
-            else togglePlay();
+            if (now - lastTap < 300) {
+                // Double tap - check position for skip
+                const clickX = e.clientX;
+                const container = document.getElementById('video-container');
+                if (container) {
+                    const containerWidth = container.offsetWidth;
+                    if (clickX < containerWidth / 2) {
+                        skipBackward();
+                    } else {
+                        skipForward();
+                    }
+                }
+            } else {
+                togglePlay();
+            }
             lastTap = now;
             resetTimer(true);
         }
