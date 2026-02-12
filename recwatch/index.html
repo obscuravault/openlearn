@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focused Video Session - Integrated Controls</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .locked {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        #video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        #player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Disables direct interaction with iframe */
+        }
+        /* Floating Controls Overlay */
+        #controls-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 20%, transparent 40%);
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+        }
+        #controls-overlay.hide-cursor {
+            cursor: none;
+        }
+        .controls-hidden {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+        input[type="range"] {
+            cursor: pointer;
+        }
+        /* Visual feedback for shortcuts */
+        #feedback-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            padding: 20px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 30;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 min-h-screen flex flex-col items-center p-4 md:p-8 text-slate-100 transition-all">
+
+    <div class="max-w-4xl w-full bg-slate-800 rounded-2xl shadow-2xl p-6 md:p-10 border border-slate-700">
+        <!-- Header -->
+        <div class="mb-6 text-center" id="header-area">
+            <h1 class="text-2xl font-bold text-white mb-2">Focused Learning Portal</h1>
+            <p id="sub-header" class="text-slate-400 text-sm">Session progress is automatically saved to your browser cache.</p>
+        </div>
+
+        <!-- Input Section -->
+        <div id="setup-section" class="space-y-4">
+            <div class="flex flex-col gap-2">
+                <label for="video-url" class="font-semibold text-slate-300">Enter YouTube URL</label>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" id="video-url" placeholder="https://www.youtube.com/watch?v=..." 
+                           class="flex-1 p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-white">
+                    <button onclick="handleManualLoad()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition-all">
+                        Load Session
+                    </button>
+                </div>
+                <p id="error-msg" class="text-red-400 text-sm hidden">Invalid YouTube URL.</p>
+            </div>
+            <div class="text-xs text-slate-500 bg-slate-900/50 p-3 rounded border border-slate-700">
+                <strong>Shortcuts:</strong> [Space] Play/Pause • [M] Mute • [F] Fullscreen • [Double Tap] Toggle Play
+            </div>
+        </div>
+
+        <!-- Integrated Video Section -->
+        <div id="player-section" class="hidden space-y-6">
+            <div id="video-container" class="rounded-xl overflow-hidden shadow-2xl border border-slate-700 group">
+                <div id="player"></div>
+                
+                <!-- Interaction & Controls Layer -->
+                <div id="controls-overlay" onmousemove="resetTimer()" onclick="handleOverlayClick(event)">
+                    
+                    <!-- Feedback Center -->
+                    <div id="feedback-indicator">
+                        <svg id="feedback-icon" class="w-12 h-12 text-white fill-current" viewBox="0 0 24 24"></svg>
+                    </div>
+
+                    <!-- Bottom Bar -->
+                    <div class="p-4 w-full flex flex-col gap-3">
+                        <!-- Progress Bar (Integrated) -->
+                        <div class="relative w-full h-1.5 bg-white/20 rounded-full overflow-hidden">
+                            <div id="progress-bar" class="absolute top-0 left-0 bg-blue-500 h-full w-0 transition-all duration-300"></div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <!-- Left: Play/Mute -->
+                            <div class="flex items-center gap-4">
+                                <button onclick="togglePlay(); event.stopPropagation();" class="text-white hover:scale-110 transition-transform">
+                                    <svg id="play-icon" class="w-7 h-7 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    <svg id="pause-icon" class="w-7 h-7 fill-current hidden" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                                </button>
+
+                                <div class="flex items-center gap-2">
+                                    <button onclick="toggleMute(); event.stopPropagation();" class="text-white/80 hover:text-white">
+                                        <svg id="vol-icon" class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                        <svg id="mute-icon" class="w-5 h-5 fill-current hidden" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                                    </button>
+                                    <input type="range" id="volume-slider" min="0" max="100" value="100" 
+                                           oninput="changeVolume(this.value); event.stopPropagation();"
+                                           class="w-16 h-1 bg-white/20 rounded-lg appearance-none accent-white">
+                                </div>
+                                <span id="time-display" class="text-[10px] font-mono text-white/60">0:00 / 0:00</span>
+                            </div>
+
+                            <!-- Right: Speed/FS -->
+                            <div class="flex items-center gap-4">
+                                <select id="speed-control" onchange="changeSpeed(this.value); event.stopPropagation();" 
+                                        class="bg-transparent text-xs font-bold text-white border-none outline-none cursor-pointer">
+                                    <option class="text-black" value="0.5">0.5x</option>
+                                    <option class="text-black" value="1" selected>1.0x</option>
+                                    <option class="text-black" value="1.5">1.5x</option>
+                                    <option class="text-black" value="2.0">2.0x</option>
+                                </select>
+                                <button onclick="toggleFullscreen(); event.stopPropagation();" class="text-white/80 hover:text-white">
+                                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lock Status -->
+            <div class="flex flex-col items-center gap-4">
+                <div class="flex justify-between w-full text-xs font-bold uppercase tracking-widest text-slate-500">
+                    <span id="status-text">🔒 Session Locked</span>
+                    <span id="percent-text">0% Complete</span>
+                </div>
+                <button id="close-btn" disabled 
+                        class="locked w-full py-4 bg-slate-700 text-slate-500 font-bold rounded-xl text-lg uppercase tracking-wider transition-all">
+                    Complete Video to Unlock
+                </button>
+                <button onclick="resetApp()" class="text-xs text-slate-500 hover:text-slate-300 underline transition-colors">
+                    Switch Video / Start New Session
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 p-8 rounded-2xl max-w-sm w-full text-center shadow-2xl border border-slate-700">
+            <div class="w-20 h-20 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">✓</div>
+            <h2 class="text-2xl font-bold mb-2">Done!</h2>
+            <p class="text-slate-400 mb-6 text-sm">Requirement met. Session cleared from cache.</p>
+            <button onclick="resetApp()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold">Start New Session</button>
+        </div>
+    </div>
+
+    <script>
+        let player;
+        let progressInterval;
+        let isComplete = false;
+        let hideTimeout;
+        let lastTap = 0;
+        let currentVideoId = "";
+
+        const icons = {
+            play: "M8 5v14l11-7z",
+            pause: "M6 19h4V5H6v14zm8-14v14h4V5h-4z",
+            mute: "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z",
+            vol: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"
+        };
+
+        // --- Core Lifecycle ---
+
+        window.onload = function() {
+            const lastSessionId = localStorage.getItem('active_video_id');
+            if (lastSessionId) {
+                loadVideo(lastSessionId);
+            }
+        };
+
+        function resetTimer() {
+            const overlay = document.getElementById('controls-overlay');
+            if(!overlay) return;
+            
+            overlay.classList.remove('controls-hidden', 'hide-cursor');
+            clearTimeout(hideTimeout);
+            
+            if (player && typeof player.getPlayerState === 'function') {
+                if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                    hideTimeout = setTimeout(() => {
+                        overlay.classList.add('controls-hidden', 'hide-cursor');
+                    }, 3000);
+                }
+            }
+        }
+
+        window.onbeforeunload = () => (!isComplete && player && typeof player.getPlayerState === 'function') ? "Your progress is saved, but you haven't finished the video!" : null;
+
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function extractVideoId(url) {
+            const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        function handleManualLoad() {
+            const url = document.getElementById('video-url').value;
+            const videoId = extractVideoId(url);
+            if (!videoId) {
+                document.getElementById('error-msg').classList.remove('hidden');
+                return;
+            }
+            loadVideo(videoId);
+        }
+
+        function loadVideo(videoId) {
+            currentVideoId = videoId;
+            
+            document.getElementById('setup-section').classList.add('hidden');
+            document.getElementById('player-section').classList.remove('hidden');
+            document.getElementById('sub-header').innerText = "Resuming your saved session...";
+
+            const savedSeconds = localStorage.getItem(`video_progress_${currentVideoId}`) || 0;
+            localStorage.setItem('active_video_id', currentVideoId);
+
+            if (player && typeof player.loadVideoById === 'function') {
+                player.loadVideoById({
+                    videoId: videoId,
+                    startSeconds: Math.floor(savedSeconds)
+                });
+            } else {
+                player = new YT.Player('player', {
+                    height: '360', width: '640', videoId: videoId,
+                    playerVars: { 
+                        'autoplay': 1, 'controls': 0, 'disablekb': 1, 'modestbranding': 1, 
+                        'rel': 0, 'iv_load_policy': 3, 'fs': 0,
+                        'start': Math.floor(savedSeconds)
+                    },
+                    events: { 
+                        'onReady': onPlayerReady, 
+                        'onStateChange': onPlayerStateChange 
+                    }
+                });
+            }
+        }
+
+        function onPlayerReady() {
+            startTracking();
+            resetTimer();
+        }
+
+        function onPlayerStateChange(event) {
+            const playIcon = document.getElementById('play-icon');
+            const pauseIcon = document.getElementById('pause-icon');
+            if (event.data == YT.PlayerState.PLAYING) {
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                resetTimer();
+            } else {
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+                clearTimeout(hideTimeout);
+                document.getElementById('controls-overlay').classList.remove('controls-hidden');
+            }
+            if (event.data == YT.PlayerState.ENDED) completeSession();
+        }
+
+        // --- Controls Logic ---
+
+        function togglePlay() {
+            if (!player || typeof player.getPlayerState !== 'function') return;
+            const state = player.getPlayerState();
+            if (state == YT.PlayerState.PLAYING) { player.pauseVideo(); showFeedback(icons.pause); }
+            else { player.playVideo(); showFeedback(icons.play); }
+        }
+
+        function toggleMute() {
+            if (!player || typeof player.isMuted !== 'function') return;
+            if (player.isMuted()) {
+                player.unMute();
+                document.getElementById('vol-icon').classList.remove('hidden');
+                document.getElementById('mute-icon').classList.add('hidden');
+                showFeedback(icons.vol);
+            } else {
+                player.mute();
+                document.getElementById('vol-icon').classList.add('hidden');
+                document.getElementById('mute-icon').classList.remove('hidden');
+                showFeedback(icons.mute);
+            }
+        }
+
+        function changeVolume(val) {
+            if (!player || typeof player.setVolume !== 'function') return;
+            player.setVolume(val);
+            if (val == 0) player.mute(); else player.unMute();
+        }
+
+        function changeSpeed(val) { 
+            if (player && typeof player.setPlaybackRate === 'function') {
+                player.setPlaybackRate(parseFloat(val)); 
+            }
+        }
+
+        function toggleFullscreen() {
+            const elem = document.getElementById('video-container');
+            if (!document.fullscreenElement) elem.requestFullscreen().catch(e => console.error(e));
+            else document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (!player || document.getElementById('player-section').classList.contains('hidden')) return;
+            switch(e.code) {
+                case 'Space': e.preventDefault(); togglePlay(); break;
+                case 'KeyM': toggleMute(); break;
+                case 'KeyF': toggleFullscreen(); break;
+            }
+        });
+
+        function handleOverlayClick(e) {
+            const now = Date.now();
+            if (now - lastTap < 300) toggleFullscreen();
+            else togglePlay();
+            lastTap = now;
+            resetTimer();
+        }
+
+        function showFeedback(path) {
+            const el = document.getElementById('feedback-indicator');
+            const icon = document.getElementById('feedback-icon');
+            if(!icon) return;
+            icon.innerHTML = `<path d="${path}"/>`;
+            el.style.opacity = '1';
+            setTimeout(() => el.style.opacity = '0', 500);
+        }
+
+        function startTracking() {
+            if (progressInterval) clearInterval(progressInterval);
+            progressInterval = setInterval(() => {
+                if (player && typeof player.getDuration === 'function') {
+                    const dur = player.getDuration();
+                    const cur = player.getCurrentTime();
+                    if (dur > 0) {
+                        const percent = (cur / dur) * 100;
+                        document.getElementById('progress-bar').style.width = percent + '%';
+                        document.getElementById('percent-text').innerText = Math.floor(percent) + '% Complete';
+                        const format = s => new Date(s * 1000).toISOString().substr(14, 5);
+                        document.getElementById('time-display').innerText = `${format(cur)} / ${format(dur)}`;
+                        if (!isComplete) {
+                            localStorage.setItem(`video_progress_${currentVideoId}`, cur);
+                        }
+                    }
+                }
+            }, 1000);
+        }
+
+        function completeSession() {
+            isComplete = true;
+            clearInterval(progressInterval);
+            
+            const btn = document.getElementById('close-btn');
+            btn.disabled = false;
+            btn.classList.replace('bg-slate-700', 'bg-green-600');
+            btn.classList.replace('text-slate-500', 'text-white');
+            btn.classList.remove('locked');
+            btn.innerText = "Session Complete - Unlock";
+            document.getElementById('status-text').innerText = "🔓 Unlocked";
+            document.getElementById('status-text').classList.replace('text-slate-500', 'text-green-500');
+            
+            // On click, show success modal. The modal's button handles the final cache clear.
+            btn.onclick = () => {
+                document.getElementById('success-modal').style.display = 'flex';
+            };
+        }
+
+        function resetApp() {
+            // Completely clear the specific video progress and the active session ID
+            if (currentVideoId) {
+                localStorage.removeItem(`video_progress_${currentVideoId}`);
+            }
+            localStorage.removeItem('active_video_id');
+            
+            // Hard reload to reset application state and show URL input
+            location.reload();
+        }
+    </script>
+</body>
+</html>
