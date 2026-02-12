@@ -94,7 +94,7 @@
             position: relative;
             z-index: 25;
         }
-        /* Touch zones for skip */
+        /* Touch zones for skip (hidden visually but active) */
         .skip-zone {
             position: absolute;
             top: 0;
@@ -102,32 +102,13 @@
             height: 100%;
             z-index: 21;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.2s;
-            background: rgba(0,0,0,0.2);
-        }
-        #video-container:hover .skip-zone {
-            opacity: 0.5;
-        }
-        .skip-zone:hover {
-            opacity: 0.8 !important;
-            background: rgba(0,0,0,0.4);
+            opacity: 0; /* Hidden but still active */
         }
         .skip-left {
             left: 0;
         }
         .skip-right {
             right: 0;
-        }
-        .skip-icon {
-            background: rgba(0,0,0,0.6);
-            border-radius: 50%;
-            padding: 12px;
-            color: white;
-            border: 2px solid rgba(255,255,255,0.5);
         }
         /* Swipe indicator */
         .swipe-indicator {
@@ -169,7 +150,7 @@
                 <p id="error-msg" class="text-red-400 text-sm hidden">Invalid YouTube URL.</p>
             </div>
             <div class="text-xs text-slate-500 bg-slate-900/50 p-3 rounded border border-slate-700">
-                <strong>Shortcuts:</strong> [Space] Play/Pause • [←] [→] Skip 5s • [M] Mute • [F] Fullscreen • [Double Tap Left/Right] Skip
+                <strong>Shortcuts:</strong> [Space] Play/Pause • [←] [→] Skip 5s • [M] Mute • [F] Fullscreen • [Double Tap Left/Right] Skip • [Swipe Left/Right] Skip
             </div>
         </div>
 
@@ -178,21 +159,9 @@
             <div id="video-container" class="rounded-xl overflow-hidden shadow-2xl border border-slate-700 group relative">
                 <div id="player"></div>
                 
-                <!-- Skip Zones for Touch/Mouse -->
-                <div class="skip-zone skip-left" onclick="skipBackward(); event.stopPropagation();" title="Skip Backward 5s">
-                    <div class="skip-icon">
-                        <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
-                            <path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="skip-zone skip-right" onclick="skipForward(); event.stopPropagation();" title="Skip Forward 5s">
-                    <div class="skip-icon">
-                        <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
-                            <path d="M13 6v12l8.5-6L13 6zm-1.5 6l-8.5 6V6l8.5 6z"/>
-                        </svg>
-                    </div>
-                </div>
+                <!-- Hidden Skip Zones for Touch/Mouse (invisible but active) -->
+                <div class="skip-zone skip-left" onclick="skipBackward(); event.stopPropagation();" title="Skip Backward 5s"></div>
+                <div class="skip-zone skip-right" onclick="skipForward(); event.stopPropagation();" title="Skip Forward 5s"></div>
                 
                 <!-- Swipe Instruction (shows on mobile) -->
                 <div class="swipe-indicator md:hidden">← Swipe Left/Right to Skip →</div>
@@ -245,21 +214,6 @@
                                            class="w-16 h-1 bg-white/20 rounded-lg appearance-none accent-white">
                                 </div>
                                 <span id="time-display" class="text-[10px] font-mono text-white/60">0:00 / 0:00</span>
-                            </div>
-
-                            <!-- Center: Skip Buttons -->
-                            <div class="flex items-center gap-2">
-                                <button onclick="skipBackward(); event.stopPropagation();" class="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition-all">
-                                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                                        <path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/>
-                                    </svg>
-                                </button>
-                                <span class="text-xs text-white/60">5s</span>
-                                <button onclick="skipForward(); event.stopPropagation();" class="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition-all">
-                                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                                        <path d="M13 6v12l8.5-6L13 6zm-1.5 6l-8.5 6V6l8.5 6z"/>
-                                    </svg>
-                                </button>
                             </div>
 
                             <!-- Right: Speed/FS -->
