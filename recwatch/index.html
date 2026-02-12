@@ -99,7 +99,11 @@
                 <div id="player"></div>
                 
                 <!-- Interaction & Controls Layer -->
-                <div id="controls-overlay" onmousemove="resetTimer()" onmousedown="resetTimer()" onclick="handleOverlayClick(event)">
+                <div id="controls-overlay" 
+                     onmouseenter="resetTimer()" 
+                     onmousemove="resetTimer()" 
+                     onmousedown="resetTimer()" 
+                     onclick="handleOverlayClick(event)">
                     
                     <!-- Feedback Center -->
                     <div id="feedback-indicator">
@@ -170,7 +174,7 @@
 
     <!-- Success Modal -->
     <div id="success-modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-800 p-8 rounded-2xl max-w-sm w-full text-center shadow-2xl border border-slate-700">
+        <div class="bg-slate-800 p-8 rounded-2xl max-sm w-full text-center shadow-2xl border border-slate-700">
             <div class="w-20 h-20 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">✓</div>
             <h2 class="text-2xl font-bold mb-2">Done!</h2>
             <p class="text-slate-400 mb-6 text-sm">Requirement met. Session cleared from cache.</p>
