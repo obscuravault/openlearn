@@ -202,15 +202,22 @@
             }
         };
 
+        /**
+         * resetTimer ensures the custom controls are visible whenever user activity is detected.
+         * Activity includes mouse movement, clicking, or typing within the player scope.
+         */
         function resetTimer() {
             const overlay = document.getElementById('controls-overlay');
             if(!overlay) return;
             
-            // Immediately show controls and reset hide timer
+            // Remove 'controls-hidden' and 'hide-cursor' classes to show the UI
             overlay.classList.remove('controls-hidden', 'hide-cursor');
+            
+            // Reset the auto-hide countdown
             clearTimeout(hideTimeout);
             
-            // Only auto-hide if the video is currently playing
+            // We only auto-hide the UI if the video is playing.
+            // If it's paused, we want the controls to stay visible for easy resumption.
             if (player && typeof player.getPlayerState === 'function') {
                 const state = player.getPlayerState();
                 if (state === YT.PlayerState.PLAYING) {
@@ -276,7 +283,7 @@
 
         function onPlayerReady() {
             startTracking();
-            resetTimer();
+            resetTimer(); // Show controls on load
         }
 
         function onPlayerStateChange(event) {
@@ -285,10 +292,11 @@
             if (event.data == YT.PlayerState.PLAYING) {
                 playIcon.classList.add('hidden');
                 pauseIcon.classList.remove('hidden');
-                resetTimer();
+                resetTimer(); // Start hide timer if playing
             } else {
                 playIcon.classList.remove('hidden');
                 pauseIcon.classList.add('hidden');
+                // Ensure controls stay visible when paused
                 clearTimeout(hideTimeout);
                 document.getElementById('controls-overlay').classList.remove('controls-hidden');
             }
@@ -300,9 +308,14 @@
         function togglePlay() {
             if (!player || typeof player.getPlayerState !== 'function') return;
             const state = player.getPlayerState();
-            if (state == YT.PlayerState.PLAYING) { player.pauseVideo(); showFeedback(icons.pause); }
-            else { player.playVideo(); showFeedback(icons.play); }
-            resetTimer(); // Ensure controls are shown when state changes
+            if (state == YT.PlayerState.PLAYING) { 
+                player.pauseVideo(); 
+                showFeedback(icons.pause); 
+            } else { 
+                player.playVideo(); 
+                showFeedback(icons.play); 
+            }
+            resetTimer(); 
         }
 
         function toggleMute() {
@@ -349,7 +362,7 @@
                 case 'KeyM': toggleMute(); break;
                 case 'KeyF': toggleFullscreen(); break;
             }
-            resetTimer(); // Keyboard interaction should also show controls
+            resetTimer(); 
         });
 
         function handleOverlayClick(e) {
@@ -402,20 +415,16 @@
             document.getElementById('status-text').innerText = "🔓 Unlocked";
             document.getElementById('status-text').classList.replace('text-slate-500', 'text-green-500');
             
-            // On click, show success modal. The modal's button handles the final cache clear.
             btn.onclick = () => {
                 document.getElementById('success-modal').style.display = 'flex';
             };
         }
 
         function resetApp() {
-            // Completely clear the specific video progress and the active session ID
             if (currentVideoId) {
                 localStorage.removeItem(`video_progress_${currentVideoId}`);
             }
             localStorage.removeItem('active_video_id');
-            
-            // Hard reload to reset application state and show URL input
             location.reload();
         }
     </script>
